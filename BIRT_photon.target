@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="BIRT Photon target platform">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="BIRT Photon target platform" sequenceNumber="2">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.platform.ide" version="4.8.0.I20180611-0500"/>
-			<unit id="org.eclipse.platform.sdk" version="4.8.0.I20180611-0500"/>
-			<unit id="org.eclipse.sdk.ide" version="4.8.0.I20180611-0500"/>
-			<repository location="http://download.eclipse.org/eclipse/updates/4.8/"/>
+			<unit id="org.eclipse.platform.ide" version="4.12.0.I20190605-1800"/>
+			<unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
+			<unit id="org.eclipse.sdk.ide" version="4.12.0.I20190605-1800"/>
+			<repository location="http://download.eclipse.org/eclipse/updates/4.12/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.emf.base.feature.group" version="2.17.0.v20181231-1705"/>
-			<unit id="org.eclipse.emf.ecore.feature.group" version="2.17.0.v20181231-1705"/>
-			<unit id="org.eclipse.emf.feature.group" version="2.17.0.v20190109-0952"/>
-			<repository location="http://download.eclipse.org/modeling/emf/emf/builds/milestone/latest"/>
+			<unit id="org.eclipse.emf.base.feature.group" version="2.20.0.v20190920-0401"/>
+			<unit id="org.eclipse.emf.ecore.feature.group" version="2.20.0.v20190920-0401"/>
+			<unit id="org.eclipse.emf.feature.group" version="2.20.0.v20191028-0905"/>
+			<repository location="http://download.eclipse.org/modeling/emf/emf/builds/release/2.20/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.1.201712071719"/>

@@ -100,7 +100,7 @@
 		<javadoc doclet="com.sun.tools.doclets.doccheck.DocCheck"
 			docletpath="${tool.lib.path}/doccheck.jar" packagenames="org.eclipse.birt.*"
 			sourcepath="${working.dir}/${projectName}/src" destdir="${javaDocCheck.base.dir}/${projectName}"
-			private="false" author="true" version="true" source="1.5"
+			private="false" author="true" version="true" source="1.6"
 			failonerror="false">
 		</javadoc>
 	</target>

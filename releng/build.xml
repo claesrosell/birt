@@ -76,7 +76,7 @@
 		<javac srcdir="${dir.src}" 
 			   destdir="${dir.bin}" 
 			   encoding="utf-8" 
-			   source="1.5" 
+			   source="1.6" 
 			   debug="true">
 			
 			<classpath refid="class.path"/>

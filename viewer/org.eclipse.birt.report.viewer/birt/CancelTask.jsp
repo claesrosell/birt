@@ -10,9 +10,10 @@
 -----------------------------------------------------------------------------%>
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page session="false" buffer="none" %>
-<%@ page import="org.eclipse.birt.report.utility.BirtUtility,
-				 org.eclipse.birt.report.IBirtConstants,	
-				 org.eclipse.birt.report.resource.BirtResources" %>
+
+<%@ page import="org.eclipse.birt.report.utility.BirtUtility" %>
+<%@ page import="org.eclipse.birt.report.IBirtConstants" %>
+<%@ page import="org.eclipse.birt.report.resource.BirtResources" %>
 
 <%-----------------------------------------------------------------------------
 	Cancel Task
