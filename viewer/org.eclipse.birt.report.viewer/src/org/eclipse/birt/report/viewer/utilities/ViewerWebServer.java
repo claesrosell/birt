@@ -45,7 +45,6 @@ public class ViewerWebServer {
 		serverProps.put(OSGiServerConstants.JETTY_HOST, host);
 		serverProps.put(OSGiServerConstants.JETTY_PORT, port);
 		serverProps.put(OSGiServerConstants.MANAGED_JETTY_XML_CONFIG_URLS, getJettyConfigURLs());
-
 		// register as an OSGi Service for Jetty to find
 		BundleContext context = ViewerPlugin.getDefault().getBundleContext();
 		serviceRegister = context.registerService(Server.class, server, serverProps);
@@ -60,7 +59,7 @@ public class ViewerWebServer {
 
 	/**
 	 * return the configuration files URLS for jetty.
-	 * 
+	 *
 	 * @return
 	 */
 	private String getJettyConfigURLs() {
