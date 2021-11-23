@@ -79,7 +79,7 @@
 			<unit id="org.apache.poi.ooxml" version="4.1.1.v20200820-1148"/>
 			<unit id="org.apache.poi.ooxml.schemas" version="4.1.1.v20200922-2105"/>
 			<unit id="org.apache.commons.collections4" version="4.4.0.v20200420-1700"/>
-			<unit id="org.apache.commons.compress" version="1.20.0.v20210713-1928"/>
+			<unit id="org.apache.commons.compress" version="1.21.0.v20211103-2100"/>
 			<unit id="org.apache.xmlbeans" version="3.1.0.v20200922-1359"/>
 			<unit id="jakarta.servlet.source" version="5.0.0.v20210105-0527"/>
 			<unit id="org.apache.batik.anim" version="1.14.0.v20210324-0332"/>
@@ -112,7 +112,7 @@
 			<unit id="org.apache.batik.xml.source" version="1.14.0.v20210324-0332"/>
 			<unit id="org.apache.commons.codec.source" version="1.14.0.v20200818-1422"/>
 			<unit id="org.apache.commons.collections4.source" version="4.4.0.v20200420-1700"/>
-			<unit id="org.apache.commons.compress.source" version="1.20.0.v20210713-1928"/>
+			<unit id="org.apache.commons.compress.source" version="1.21.0.v20211103-2100"/>
 			<unit id="org.apache.lucene.analyzers-common.source" version="8.4.1.v20200122-1459"/>
 			<unit id="org.apache.lucene.analyzers-smartcn" version="8.4.1.v20200122-1459"/>
 			<unit id="org.apache.lucene.analyzers-smartcn.source" version="8.4.1.v20200122-1459"/>
