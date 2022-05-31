@@ -1336,6 +1336,8 @@ public class GetParameterDefinitionTask extends EngineTask implements IGetParame
 				scalarParameter.setControlType(IScalarParameterDefn.RADIO_BUTTON);
 			} else if (DesignChoiceConstants.PARAM_CONTROL_AUTO_SUGGEST.equals(controlType)) {
 				scalarParameter.setControlType(IScalarParameterDefn.AUTO_SUGGEST);
+			} else if (DesignChoiceConstants.PARAM_CONTROL_DATE_CTRL.equals(controlType)) {
+				scalarParameter.setControlType(IScalarParameterDefn.DATE_CTRL);
 			} else {
 				scalarParameter.setControlType(IScalarParameterDefn.TEXT_BOX);
 			}

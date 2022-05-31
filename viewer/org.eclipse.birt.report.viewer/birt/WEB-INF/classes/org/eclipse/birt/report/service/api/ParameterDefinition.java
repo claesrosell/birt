@@ -26,6 +26,7 @@ public class ParameterDefinition {
 	public static final int LIST_BOX = 1;
 	public static final int RADIO_BUTTON = 2;
 	public static final int CHECK_BOX = 3;
+	public static final int DATE_CTRL = 5;
 
 	public static final int AUTO = 0;
 	public static final int LEFT = 1;

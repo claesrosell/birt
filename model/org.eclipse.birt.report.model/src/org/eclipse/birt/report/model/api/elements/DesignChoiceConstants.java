@@ -545,6 +545,7 @@ public interface DesignChoiceConstants {
 
 	/** design constant: param control auto suggest */
 	String PARAM_CONTROL_AUTO_SUGGEST = "auto-suggest"; //$NON-NLS-1$
+	String PARAM_CONTROL_DATE_CTRL = "date-ctrl"; //$NON-NLS-1$
 
 
 	// textAlign

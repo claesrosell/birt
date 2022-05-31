@@ -46,6 +46,8 @@ public class ParameterFactory {
 
 	private static final String AUTOSUGGEST_BOX = DesignChoiceConstants.PARAM_CONTROL_AUTO_SUGGEST;
 
+	private static final String DATE_CONTROL = DesignChoiceConstants.PARAM_CONTROL_DATE_CTRL;
+
 	private IGetParameterDefinitionTask task;
 
 	/**
@@ -195,6 +197,8 @@ public class ParameterFactory {
 			param = new RadioParameter(paramHandle, task);
 		} else if (controlType.equals(CHECK_BOX)) {
 			param = new CheckBoxParameter(paramHandle, task);
+		} else if (controlType.equals(DATE_CONTROL)) {
+			param = new DateControlParameter(paramHandle, task);
 		}
 
 		return param;

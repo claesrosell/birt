@@ -27,6 +27,7 @@ import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.presentation.aggregation.IFragment;
 import org.eclipse.birt.report.presentation.aggregation.parameter.CheckboxParameterFragment;
 import org.eclipse.birt.report.presentation.aggregation.parameter.ComboBoxParameterFragment;
+import org.eclipse.birt.report.presentation.aggregation.parameter.DateControlParameterFragment;
 import org.eclipse.birt.report.presentation.aggregation.parameter.HiddenParameterFragment;
 import org.eclipse.birt.report.presentation.aggregation.parameter.ParameterGroupFragment;
 import org.eclipse.birt.report.presentation.aggregation.parameter.RadioButtonParameterFragment;
@@ -130,6 +131,10 @@ public class ParameterDialogFragment extends BaseDialogFragment {
 						}
 						case ParameterDefinition.CHECK_BOX: {
 							fragment = new CheckboxParameterFragment(scalarParameter);
+							break;
+						}
+						case ParameterDefinition.DATE_CTRL: {
+							fragment = new DateControlParameterFragment(scalarParameter);
 							break;
 						}
 						}

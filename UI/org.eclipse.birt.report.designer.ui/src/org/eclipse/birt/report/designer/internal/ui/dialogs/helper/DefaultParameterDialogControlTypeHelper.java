@@ -14,6 +14,7 @@
 
 package org.eclipse.birt.report.designer.internal.ui.dialogs.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.birt.report.designer.ui.dialogs.ParameterDialog;
@@ -101,23 +102,29 @@ public class DefaultParameterDialogControlTypeHelper extends AbstractDialogHelpe
 	}
 
 	protected void inwardUpdate() {
-		String[] choices = new String[4];
+		List<String> choices = new ArrayList<>();
 
 		String originalSelection = controlTypeChooser.getText();
+
 		if (DesignChoiceConstants.PARAM_TYPE_BOOLEAN.equals(getDataType())) {
-			choices[0] = CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_CHECK_BOX)
-					.getDisplayName();
+			choices.add(
+					CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_CHECK_BOX).getDisplayName());
 		} else {
-			choices[0] = CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_TEXT_BOX)
-					.getDisplayName();
+			choices.add(
+					CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_TEXT_BOX).getDisplayName());
 		}
-		choices[1] = ParameterDialog.DISPLAY_NAME_CONTROL_COMBO;
-		choices[2] = ParameterDialog.DISPLAY_NAME_CONTROL_LIST;
+		choices.add(ParameterDialog.DISPLAY_NAME_CONTROL_COMBO);
+		choices.add(ParameterDialog.DISPLAY_NAME_CONTROL_LIST);
 
-		choices[3] = CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_RADIO_BUTTON)
-				.getDisplayName();
+		choices.add(
+				CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_RADIO_BUTTON).getDisplayName());
 
-		controlTypeChooser.setItems(choices);
+		if (DesignChoiceConstants.PARAM_TYPE_DATE.equals(getDataType())) {
+			choices.add(
+					CONTROL_TYPE_CHOICE_SET.findChoice(DesignChoiceConstants.PARAM_CONTROL_DATE_CTRL).getDisplayName());
+		}
+
+		controlTypeChooser.setItems(choices.toArray(new String[0]));
 		if (originalSelection.length() == 0) {// initialize
 			controlTypeChooser.setText(getInputControlDisplayName());
 		} else {
@@ -144,4 +151,5 @@ public class DefaultParameterDialogControlTypeHelper extends AbstractDialogHelpe
 		}
 		return displayName;
 	}
+
 }

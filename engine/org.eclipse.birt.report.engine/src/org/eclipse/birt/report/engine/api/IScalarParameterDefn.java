@@ -23,6 +23,7 @@ public interface IScalarParameterDefn extends IParameterDefn {
 	int RADIO_BUTTON = 2;
 	int CHECK_BOX = 3;
 	int AUTO_SUGGEST = 4;
+	int DATE_CTRL = 5;
 
 	int AUTO = 0;
 	int LEFT = 1;

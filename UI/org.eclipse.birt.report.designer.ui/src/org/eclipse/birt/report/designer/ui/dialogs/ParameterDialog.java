@@ -1619,6 +1619,8 @@ public class ParameterDialog extends BaseTitleAreaDialog {
 				} else if (DesignChoiceConstants.PARAM_CONTROL_TEXT_BOX.equals(type)) {
 					clearArea(valueArea);
 					switchToText();
+				} else if (DesignChoiceConstants.PARAM_CONTROL_DATE_CTRL.equals(type)) {
+					clearArea(valueArea);
 				}
 				valueArea.layout();
 				initValueArea();

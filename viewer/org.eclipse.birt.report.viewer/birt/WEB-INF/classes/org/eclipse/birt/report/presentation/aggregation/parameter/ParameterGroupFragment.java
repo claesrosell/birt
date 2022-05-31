@@ -107,6 +107,10 @@ public class ParameterGroupFragment extends BirtBaseFragment {
 						fragment = new CheckboxParameterFragment(scalarParameter);
 						break;
 					}
+					case ParameterDefinition.DATE_CTRL: {
+						fragment = new DateControlParameterFragment(scalarParameter);
+						break;
+					}
 					}
 				} else {
 					// handle hidden parameter

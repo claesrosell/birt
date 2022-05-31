@@ -199,6 +199,7 @@
     <Choice displayNameID="Choices.paramControl.radio-button" name="radio-button"/>
     <Choice displayNameID="Choices.paramControl.check-box" name="check-box"/>
     <Choice displayNameID="Choices.paramControl.auto-suggest" name="auto-suggest"/>
+    <Choice displayNameID="Choices.paramControl.date-ctrl" name="date-ctrl"/>
   </ChoiceType>
   <ChoiceType name="textAlign">
     <Choice displayNameID="Choices.textAlign.left" name="left"/>
