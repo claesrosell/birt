@@ -12,12 +12,14 @@ package org.eclipse.birt.report.viewer.utilities;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.SimpleInstanceManager;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
 import org.eclipse.jetty.osgi.boot.OSGiServerConstants;
 import org.eclipse.jetty.osgi.boot.OSGiWebappConstants;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -52,6 +54,8 @@ public class ViewerWebApp {
 
 		webapp.addConfiguration(servletsConfiguration);
 
+		webapp.setAttribute("org.eclipse.jetty.containerInitializers",
+				Arrays.asList(new JettyJasperInitializer()));
 		webapp.setAttribute(InstanceManager.class.getName(), new SimpleInstanceManager());
 
 		Dictionary<String, Object> props = new Hashtable<>();

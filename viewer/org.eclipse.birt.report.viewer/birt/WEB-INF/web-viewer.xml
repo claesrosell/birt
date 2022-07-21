@@ -182,6 +182,11 @@
 		<param-value>org.eclipse.birt.report.utility.filename.DefaultFilenameGenerator</param-value>
 	</context-param>
 
+	<context-param>
+		<param-name>org.apache.jasper.compiler.TldCache</param-name>
+		<param-value>The.miffo</param-value>
+	</context-param>
+
 	<!--
 		Viewer Filter used to set the request character encoding to UTF-8.
 	-->
