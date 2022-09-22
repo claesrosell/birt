@@ -55,6 +55,12 @@ public class ParameterFactory {
 	private static final String LIST_BOX = "list-box";//$NON-NLS-1$
 
 	/**
+	 * date control
+	 */
+
+	private static final String DATE_CONTROL = "date-ctrl";//$NON-NLS-1$
+
+	/**
 	 * Constructor.
 	 *
 	 * @param task
@@ -195,6 +201,8 @@ public class ParameterFactory {
 			param = new StaticTextParam(paramHandle, task);
 		} else if (controlType.equals(RADIO_BUTTON)) {
 			param = new RadioParam(paramHandle, task);
+		} else if (controlType.equals(DATE_CONTROL)) {
+			param = new DateParam(paramHandle, task);
 		}
 
 		return param;

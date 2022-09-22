@@ -57,6 +57,7 @@ public class ViewerWebApp {
 		webapp.setAttribute("org.eclipse.jetty.containerInitializers",
 				Arrays.asList(new JettyJasperInitializer()));
 		webapp.setAttribute(InstanceManager.class.getName(), new SimpleInstanceManager());
+//		webapp.setAttribute("org.apache.jasper.compiler.TldCache", TldCache.getInstance(webapp.getServletContext()));
 
 		Dictionary<String, Object> props = new Hashtable<>();
 		props.put(OSGiWebappConstants.RFC66_WEB_CONTEXTPATH, contextPath); // Web-ContextPath: /viewer
