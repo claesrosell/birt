@@ -17,6 +17,7 @@ BirtCommunicationManager = Class.create( );
 
 BirtCommunicationManager.prototype =
 {
+	__useJsonRest : true,
 	__active : false,
 	
 	/**
@@ -35,31 +36,49 @@ BirtCommunicationManager.prototype =
 	 */
 	connect: function( )
 	{
-		var xmlDoc = birtSoapRequest.__xml_document;
+		if ( !this.__useJsonRest ) {
+			var xmlDoc = birtSoapRequest.__xml_document;
 		
-		if( xmlDoc )
-		{
-			debug( birtSoapRequest.prettyPrintXML(xmlDoc), true);
-			if ( BrowserUtility.isSafari || BrowserUtility.isFirefox3 )
+			if( xmlDoc )
 			{
-				// WORKAROUND: sending the XML DOM doesn't replace the
-				// ampersands properly but the XMLSerializer does.
-				xmlDoc = (new XMLSerializer()).serializeToString(xmlDoc);
-			}
-		}		
+				debug( birtSoapRequest.prettyPrintXML(xmlDoc), true);
+				if ( BrowserUtility.isSafari || BrowserUtility.isFirefox3 )
+				{
+					// WORKAROUND: sending the XML DOM doesn't replace the
+					// ampersands properly but the XMLSerializer does.
+					xmlDoc = (new XMLSerializer()).serializeToString(xmlDoc);
+				}
+			}		
+			
+			if ( !birtSoapRequest.getURL( ) ) return;
+	
+			//activate delay message manager;
+			this.__active = true;
+			birtProgressBar.__start( );
+			
+			//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
+			var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: xmlDoc,
+				contentType: 'text/xml; charset=UTF-8',
+				onSuccess: this.responseHandler, onFailure: this.invalidResponseHandler,
+				requestHeaders: ['SOAPAction', '""', 'request-type', 'SOAP', 'Connection', 'keep-alive' ] } );
+			birtSoapRequest.reset( );
+		} else {
+			let jsonDoc = birtSoapRequest.getJsonDocument();
 		
-		if ( !birtSoapRequest.getURL( ) ) return;
-
-		//activate delay message manager;
-		this.__active = true;
-		birtProgressBar.__start( );
-		
-		//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
-		var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: xmlDoc,
-			contentType: 'text/xml; charset=UTF-8',
-			onSuccess: this.responseHandler, onFailure: this.invalidResponseHandler,
-			requestHeaders: ['SOAPAction', '""', 'request-type', 'SOAP', 'Connection', 'keep-alive' ] } );
-		birtSoapRequest.reset( );
+			
+			if ( !birtSoapRequest.getURL( ) ) return;
+	
+			//activate delay message manager;
+			this.__active = true;
+			birtProgressBar.__start( );
+			
+			//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
+			var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: jsonDoc,
+				contentType: 'application/json',
+				onSuccess: this.jsonResponseHandler, onFailure: this.invalidResponseHandler,
+				requestHeaders: ['Connection', 'keep-alive' ] } );
+				birtSoapRequest.reset( );
+		}
 	},
 	
 	/**
@@ -84,6 +103,29 @@ BirtCommunicationManager.prototype =
 		birtCommunicationManager.postProcess( );
 		//todo handle responseText
 	},
+
+	/**
+	 *	Callback function triggered when reponse is ready, status is 200.
+	 *
+	 *	@request, httpXmlRequest instance
+	 *	@return, void
+	 */
+	 jsonResponseHandler: function( request )
+	 {
+		let jsonResponse = JSON.parse(request.responseText);
+		 if ( isDebugging( ) )
+		 {
+			 debug(request.responseText, true);
+		 }
+		 
+		 if (jsonResponse != null )
+		 {
+			 birtSoapResponse.processJson( jsonResponse );
+		 }
+		 
+		 birtCommunicationManager.postProcess( );
+		 //todo handle responseText
+	 },
 	
 	/**
 	 *	Callback function triggered when reponse is ready status is not 200.

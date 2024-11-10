@@ -130,9 +130,11 @@
 		<script src="birt/ajax/utility/Printer.js" type="text/javascript"></script>
 
 		<script src="birt/ajax/core/BirtCommunicationManager.js" type="text/javascript"></script>
-		<script src="birt/ajax/core/BirtSoapRequest.js" type="text/javascript"></script>
+<!--	<script src="birt/ajax/core/BirtSoapRequest.js" type="text/javascript"></script> -->
+		<script src="birt/ajax/core/BirtJsonRestRequest.js" type="text/javascript"></script>
 		<script src="birt/ajax/core/BirtSoapResponse.js" type="text/javascript"></script>
-		
+
+
 	</HEAD>
 	
 	<BODY 

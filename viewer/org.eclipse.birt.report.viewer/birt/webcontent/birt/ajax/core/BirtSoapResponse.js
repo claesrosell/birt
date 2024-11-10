@@ -76,6 +76,38 @@ BirtSoapResponse.prototype =
 				handler.__process( message );
 			}
 		}
+	},
+
+	processJson : function( message ) {
+		if ( message )
+		{
+			for ( let i = 0; i < message.update.length; i++ )
+			{
+				let messageChild = message.update[i];
+
+				if ( messageChild.tagName == 'soapenv:Fault' )
+				{
+					birtExceptionDialog.__cb_bind( messageChild );
+				}
+				else
+				{
+					var handler = eval( 'birt' + messageChild.tagName + 'Handler' );
+					if ( handler )
+					{
+						handler.__process( messageChild );
+					}
+				}
+				
+				break;
+
+			}
+			
+			return;
+		}
+		
+
+
+		console.log("ksflj");
 	}
 }
 

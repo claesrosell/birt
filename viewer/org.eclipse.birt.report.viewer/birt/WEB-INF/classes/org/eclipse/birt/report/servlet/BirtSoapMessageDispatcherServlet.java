@@ -15,6 +15,8 @@ package org.eclipse.birt.report.servlet;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.Scanner;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -33,9 +35,20 @@ import org.eclipse.birt.report.resource.BirtResources;
 import org.eclipse.birt.report.resource.ResourceConstants;
 import org.eclipse.birt.report.session.IViewingSession;
 import org.eclipse.birt.report.session.ViewingSessionUtil;
+import org.eclipse.birt.report.soapengine.api.GetUpdatedObjects;
+import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
+import org.eclipse.birt.report.soapengine.endpoint.BirtSoapBindingImpl;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
+
+	/**
+	 * The JSON content type.
+	 */
+	public static final String JSON_CONTENT_TYPE = "application/json"; //$NON-NLS-1$
 
 	/**
 	 * TODO: what's this?
@@ -190,6 +203,7 @@ abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 
 		String requestType = request.getHeader(ParameterAccessor.HEADER_REQUEST_TYPE);
 		boolean isSoapRequest = ParameterAccessor.HEADER_REQUEST_TYPE_SOAP.equalsIgnoreCase(requestType);
+		boolean isJsonRestRequest = Objects.equals(JSON_CONTENT_TYPE, getContentType(request.getContentType()));
 		// refresh the current BIRT viewing session by accessing it
 		IViewingSession session;
 
@@ -225,6 +239,8 @@ abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
 				super.doPost(request, response);
+			} else if (isJsonRestRequest) {
+				handleJsonRestRequest(request, response);
 			} else {
 				try {
 					if (context.getBean().getException() != null) {
@@ -244,4 +260,48 @@ abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 			}
 		}
 	}
+
+	static String getContentType(String contentType) {
+		if (contentType != null) {
+			String[] contentTypeParts = contentType.split(";");
+			if (contentTypeParts.length > 0) {
+				return contentTypeParts[0].trim();
+			}
+		}
+
+		return null;
+	}
+
+	static String extractPostRequestBody(HttpServletRequest request) throws IOException {
+		if ("POST".equalsIgnoreCase(request.getMethod())) {
+			Scanner s = new Scanner(request.getInputStream(), "UTF-8").useDelimiter("\\A");
+			return s.hasNext() ? s.next() : "";
+		}
+		return "";
+	}
+
+	static void handleJsonRestRequest(HttpServletRequest request, HttpServletResponse response) {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try {
+			String bodyContent = extractPostRequestBody(request);
+			if (!bodyContent.isBlank()) {
+				JsonNode jsonRequest = objectMapper.readTree(bodyContent);
+				String serviceOperation = jsonRequest.get("name").asText();
+				if (serviceOperation.equals("GetUpdatedObjects")) {
+					JsonNode jsonRequestData = jsonRequest.get("data");
+					GetUpdatedObjects getUpdatedObjects = objectMapper.treeToValue(jsonRequestData,
+							GetUpdatedObjects.class);
+					BirtSoapBindingImpl test = new BirtSoapBindingImpl();
+					GetUpdatedObjectsResponse updatedObjects = test.getUpdatedObjects(getUpdatedObjects);
+					String writeValueAsString = objectMapper.writeValueAsString(updatedObjects);
+					response.getWriter().print(writeValueAsString);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }
