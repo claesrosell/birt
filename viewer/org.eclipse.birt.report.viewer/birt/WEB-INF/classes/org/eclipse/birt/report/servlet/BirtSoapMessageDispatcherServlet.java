@@ -204,8 +204,10 @@ abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 		request.setAttribute("SoapURL", soapURL); //$NON-NLS-1$
 
 		String requestType = request.getHeader(ParameterAccessor.HEADER_REQUEST_TYPE);
-		boolean isSoapRequest = ParameterAccessor.HEADER_REQUEST_TYPE_SOAP.equalsIgnoreCase(requestType);
 		boolean isJsonRestRequest = Objects.equals(JSON_CONTENT_TYPE, getContentType(request.getContentType()));
+		boolean isSoapRequest = ParameterAccessor.HEADER_REQUEST_TYPE_SOAP.equalsIgnoreCase(requestType)
+				&& !isJsonRestRequest;
+
 		// refresh the current BIRT viewing session by accessing it
 		IViewingSession session;
 

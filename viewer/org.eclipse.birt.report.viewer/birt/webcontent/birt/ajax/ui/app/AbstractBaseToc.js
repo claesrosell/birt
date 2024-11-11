@@ -82,8 +82,9 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 	 */
 	__cb_bind : function( data )
 	{		
-		var datas = data.getElementsByTagName( 'Child' );
-		var len = datas.length;
+		var datas = data["toc"] ? data["toc"]["child"] : null;
+
+		var len = datas ? datas.length : 0;
 		if( len == 0 )
 		{
 			return ;
@@ -104,13 +105,8 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 
 			var tmp = datas[i];
 
-			var displaynames = tmp.getElementsByTagName( 'DisplayName' );
-			var displayname = displaynames[0].firstChild;
-			var s_displayname = "";
-			if( displayname )
-				s_displayname = displayname.data;			
-			
-			var isLeafs = tmp.getElementsByTagName( 'IsLeaf' );
+			var s_displayname = tmp["displayName"] ? tmp["displayName"] : "";
+			var isLeaf = tmp["isLeaf"];
 			var img = document.createElement( "input" );
 			img.type = "image";
 			img.style.backgroundRepeat = 'no-repeat';
@@ -122,7 +118,7 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 			img.query = '0';		//default it needs to communicate with the server.
 			img.title = birtUtility.htmlDecode( s_displayname );
 			
-			if ( isLeafs[0].firstChild.data == "false" )
+			if ( isLeaf == false )
 			{
 				img.src = "birt/images/Expand.gif" ;
 				img.style.cursor = 'pointer';			
@@ -143,11 +139,8 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 			var td12 = document.createElement( "td" );
 			td12.valign = "top";
 			
-			var nodeIds = tmp.getElementsByTagName( 'Id' );
-			img.nodeId = nodeIds[0].firstChild.data;
-			
-			var bookmarks = tmp.getElementsByTagName( 'Bookmark' );
-			img.bookmark = bookmarks[0].firstChild.data;			
+			img.nodeId = tmp["id"];
+			img.bookmark = tmp["bookmark"];
 
 			var tocitem = document.createElement( "div" );			
 			tocitem.title = birtUtility.htmlDecode( s_displayname );
@@ -155,15 +148,14 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 			tocitem.innerHTML = s_displayname ? s_displayname : "&nbsp;";
 						
 			var cssText = "cursor:pointer;border:0px;font-family:Verdana;font-size:9pt;background-color:#FFFFFF;overflow:visible;";			
-			var styles = tmp.getElementsByTagName( 'Style' );
-			if( styles && styles.length > 0 )
-			{
-				if( styles[0].firstChild )
-					tocitem.style.cssText = cssText + styles[0].firstChild.data;
-				else
-					tocitem.style.cssText = cssText;							
+			var style = tmp["style"];
+			if( style ) {
+				tocitem.style.cssText = cssText + style;
 			}
-							
+			else {
+				tocitem.style.cssText = cssText;							
+			}
+
 			td12.appendChild( tocitem );
 			td12.noWrap = true;
 			

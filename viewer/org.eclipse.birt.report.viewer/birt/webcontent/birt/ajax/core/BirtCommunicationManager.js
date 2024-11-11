@@ -76,7 +76,7 @@ BirtCommunicationManager.prototype =
 			var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: jsonDoc,
 				contentType: 'application/json',
 				onSuccess: this.jsonResponseHandler, onFailure: this.invalidResponseHandler,
-				requestHeaders: ['Connection', 'keep-alive' ] } );
+				requestHeaders: ['request-type', 'SOAP', 'Connection', 'keep-alive' ] } );	// SOAP for session handling. Replace with something else.
 				birtSoapRequest.reset( );
 		}
 	},
