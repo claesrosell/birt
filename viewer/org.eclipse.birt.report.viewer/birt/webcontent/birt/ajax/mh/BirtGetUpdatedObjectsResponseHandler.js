@@ -27,8 +27,22 @@ BirtGetUpdatedObjectsResponseHandler.prototype = Object.extend( new BirtBaseResp
 	__process: function( message )
 	{
 		if ( !message ) return;
-		this.__processUpdateContent( message.getElementsByTagName( 'UpdateContent' ) );
-		this.__processUpdateData( message.getElementsByTagName( 'UpdateData' ) );
+
+		let updateContentList = [];
+		let updateContentData = [];
+		for ( let updateIndex = 0; updateIndex < message.update.length; updateIndex++ )
+		{
+			let update = message.update[updateIndex];
+			if ( update.updateContent != undefined && update.updateContent != null ) {
+				updateContentList.push( update.updateContent );
+			}
+			if ( update.updateData != undefined && update.updateData != null ) {
+				updateContentData.push( update.updateData );
+			}
+		}
+
+		this.__processUpdateContent( updateContentList );
+		this.__processUpdateData( updateContentData );
 	},
 	
 	/**
@@ -46,8 +60,7 @@ BirtGetUpdatedObjectsResponseHandler.prototype = Object.extend( new BirtBaseResp
 		{
 			try
 			{
-				var target = updates[i].getElementsByTagName( 'Target' )[0]; //assumes only 1 target per UpdateContent
-				var targetData = target.firstChild.data				
+				var targetData = updates[i].target
 				var targetType = targetData.substring( 0, 5 );
 				var handler = this.associations[targetType];
 				
@@ -58,8 +71,7 @@ BirtGetUpdatedObjectsResponseHandler.prototype = Object.extend( new BirtBaseResp
 					throw error;
 				}
 								
-				var content = updates[i].getElementsByTagName( 'Content' )[0]; //assumes only 1 context per UpdateContent	
-				if ( !content ) 
+				if ( !updates[i].content ) 
 				{
 					var error = { name : "CustomError",
 								  message : ( " __processUpdateContent empty contents" ) };
@@ -74,36 +86,17 @@ BirtGetUpdatedObjectsResponseHandler.prototype = Object.extend( new BirtBaseResp
 				// firefox can use textContent to retrieve the complete node content,
 				// check this property first to avoid string concatation which is very
 				// slow for large node.  
-				var contentData = content.textContent;
-				
-				if (!contentData)
-				{
-					// for non-fireforx browser, we still use string concatation 
-					// to retrieve the complete content.
-					
-					contentData = "";
-					
-					if ( content.hasChildNodes )
-					{
-						for( var j = 0; j < content.childNodes.length; j++ )
-						{
-							if( content.childNodes[j].nodeType == 3 ) //Text type
-							{
-								contentData += content.childNodes[j].data;
-							}
-						}		
-					}
-				}
-				
+				var contentData = updates[i].content;
 				if ( contentData )
 				{
 					handler.__cb_disposeEventHandlers( targetData );
 					handler.__cb_render( targetData, contentData );
-					var inits = updates[i].getElementsByTagName( 'InitializationId' );
-					var bookmarks = updates[i].getElementsByTagName( 'Bookmark' );
-					if ( bookmarks.length > 0 )
+					let inits = updates[i].initializationId;
+
+					let bookmarks = updates[i].bookmark;
+					if ( bookmarks != undefined && bookmarks != null )
 					{
-						handler.__cb_installEventHandlers( targetData, inits, bookmarks[0].firstChild.data );
+						handler.__cb_installEventHandlers( targetData, inits, bookmarks );
 					}
 					else
 					{
@@ -134,25 +127,25 @@ BirtGetUpdatedObjectsResponseHandler.prototype = Object.extend( new BirtBaseResp
 	{
 		if ( !updates ) return;
 		
-		for ( var i = 0; i < updates.length; i++ )
+		for ( let i = 0; i < updates.length; i++ )
 		{
-			var targets = updates[i].getElementsByTagName( 'Target' );
-			if ( !targets || targets.length <= 0 ) continue;
+			let targets = updates[i].target;
+			if ( !targets || targets == null ) continue;
 			
-			var datas = updates[i].getElementsByTagName( 'Data' );
-			if ( !datas || datas.length <= 0 ) continue;
+			let datas = updates[i].data;
+			if ( !datas || datas == null ) continue;
 
-			var handler = null;
+			let handler = null;
 			try
 			{
-				handler = eval( targets[0].firstChild.data );
+				handler = eval( targets );
 			}
 			catch ( e )
 			{
 			}
 			if ( !handler || !handler.__cb_bind ) continue;
 			
-			handler.__cb_bind( datas[0] );
+			handler.__cb_bind( datas );
 		}
 	},
 	

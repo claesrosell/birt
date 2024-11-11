@@ -60,16 +60,15 @@ BirtNavigationBar.prototype = Object.extend( new AbstractUIComponent( ),
 			return;
 		}
 		
-		var oPageNumbers = data.getElementsByTagName( 'PageNumber' );
-		if ( !oPageNumbers && !oPageNumbers[0] )
+		if ( !data["page"] || data["page"] == null )
 		{
 			return;
 		}
+
+		this.__oPageNumber.innerHTML = data["page"]["pageNumber"];
 		
-		this.__oPageNumber.innerHTML = oPageNumbers[0].firstChild.data;
-		
-		var oTotalPages = data.getElementsByTagName( 'TotalPage' );
-		this.__oTotalPage.innerHTML = ( oTotalPages && oTotalPages[0] )? oTotalPages[0].firstChild.data : '+';
+		var oTotalPages = data["page"]["totalPage"];
+		this.__oTotalPage.innerHTML = ( oTotalPages && oTotalPages != null )? oTotalPages : '+';
 		
 		var pageNumber = parseInt( this.__oPageNumber.firstChild.data );
 		var totalPage = ( this.__oTotalPage.firstChild.data == '+' )? '+' : parseInt( this.__oTotalPage.firstChild.data );

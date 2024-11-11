@@ -81,34 +81,24 @@ BirtSoapResponse.prototype =
 	processJson : function( message ) {
 		if ( message )
 		{
-			for ( let i = 0; i < message.update.length; i++ )
+			let resposeType = message["name"];
+			let responsePayload = message["data"];
+
+
+			if (resposeType == 'exception')
 			{
-				let messageChild = message.update[i];
-
-				if ( messageChild.tagName == 'soapenv:Fault' )
-				{
-					birtExceptionDialog.__cb_bind( messageChild );
-				}
-				else
-				{
-					var handler = eval( 'birt' + messageChild.tagName + 'Handler' );
-					if ( handler )
-					{
-						handler.__process( messageChild );
-					}
-				}
-				
-				break;
-
+				birtExceptionDialog.__cb_bind( responsePayload );
 			}
-			
-			return;
+			else
+			{
+				let handler = eval( 'birt' + resposeType + 'Handler' );
+				if ( handler )
+				{
+					handler.__process( responsePayload );
+				}
+			}
 		}
-		
-
-
-		console.log("ksflj");
 	}
 }
 
-var birtSoapResponse = new BirtSoapResponse( );
+var birtSoapResponse = new BirtSoapResponse();

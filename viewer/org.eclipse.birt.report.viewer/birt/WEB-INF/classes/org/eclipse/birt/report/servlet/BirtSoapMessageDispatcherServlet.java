@@ -42,6 +42,7 @@ import org.eclipse.birt.report.utility.ParameterAccessor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 
@@ -294,7 +295,11 @@ abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 							GetUpdatedObjects.class);
 					BirtSoapBindingImpl test = new BirtSoapBindingImpl();
 					GetUpdatedObjectsResponse updatedObjects = test.getUpdatedObjects(getUpdatedObjects);
-					String writeValueAsString = objectMapper.writeValueAsString(updatedObjects);
+					JsonNode valueToTree = objectMapper.valueToTree(updatedObjects);
+					ObjectNode responseObject = objectMapper.createObjectNode();
+					responseObject.put("name", updatedObjects.getClass().getSimpleName());
+					responseObject.set("data", valueToTree);
+					String writeValueAsString = objectMapper.writeValueAsString(responseObject);
 					response.getWriter().print(writeValueAsString);
 				}
 			}

@@ -37,19 +37,19 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		if ( this.__rtl == null )
 		{
 			this.__rtl = false;
-			var oRtlElement = data.getElementsByTagName( 'rtl' );
-			if ( oRtlElement && oRtlElement[0] && oRtlElement[0].firstChild )
+			let oRtlElement = data["rtl"];
+			if ( data["rtl"] && data["rtl"] != null )
 			{
-				this.__rtl = ( "true" == oRtlElement[0].firstChild.data );
+				this.__rtl = ( "true" == data["rtl"] );
 			}
 		}
 		
 		var documentViewElement = $("documentView");
-		documentViewElement.style.direction = this.__rtl?"rtl":"ltr";
+		documentViewElement.style.direction = this.__rtl ? "rtl" : "ltr";
 		var docObj = document.getElementById( "Document" );
 		if ( docObj && BrowserUtility.isMozilla && !BrowserUtility.isFirefox3 )
 		{
-			docObj.scrollLeft = this.__rtl?(docObj.offsetWidth + "px"):"0px";
+			docObj.scrollLeft = this.__rtl ? (docObj.offsetWidth + "px") : "0px";
 		}
 	},
 	
