@@ -81,20 +81,23 @@ BirtSoapResponse.prototype =
 	processJson : function( message ) {
 		if ( message )
 		{
-			let resposeType = message["name"];
-			let responsePayload = message["data"];
-
-
-			if (resposeType == 'exception')
+			let responseType = message["name"];
+			if ( responseType )
 			{
-				birtExceptionDialog.__cb_bind( responsePayload );
-			}
-			else
-			{
-				let handler = eval( 'birt' + resposeType + 'Handler' );
+				let responsePayload = message["data"];
+				let handler = eval( 'birt' + responseType + 'Handler' );
 				if ( handler )
 				{
 					handler.__process( responsePayload );
+				}
+			}
+			else
+			{
+				// Error
+				let error = message["exception"];
+				if ( error )
+				{
+					birtExceptionDialog.__cb_bind( error );
 				}
 			}
 		}

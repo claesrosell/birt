@@ -42,6 +42,7 @@ import org.eclipse.birt.report.utility.ParameterAccessor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
@@ -290,17 +291,33 @@ abstract public class BirtSoapMessageDispatcherServlet extends AxisServlet {
 				JsonNode jsonRequest = objectMapper.readTree(bodyContent);
 				String serviceOperation = jsonRequest.get("name").asText();
 				if (serviceOperation.equals("GetUpdatedObjects")) {
-					JsonNode jsonRequestData = jsonRequest.get("data");
-					GetUpdatedObjects getUpdatedObjects = objectMapper.treeToValue(jsonRequestData,
-							GetUpdatedObjects.class);
-					BirtSoapBindingImpl test = new BirtSoapBindingImpl();
-					GetUpdatedObjectsResponse updatedObjects = test.getUpdatedObjects(getUpdatedObjects);
-					JsonNode valueToTree = objectMapper.valueToTree(updatedObjects);
-					ObjectNode responseObject = objectMapper.createObjectNode();
-					responseObject.put("name", updatedObjects.getClass().getSimpleName());
-					responseObject.set("data", valueToTree);
-					String writeValueAsString = objectMapper.writeValueAsString(responseObject);
-					response.getWriter().print(writeValueAsString);
+					try {
+						JsonNode jsonRequestData = jsonRequest.get("data");
+						GetUpdatedObjects getUpdatedObjects = objectMapper.treeToValue(jsonRequestData,
+								GetUpdatedObjects.class);
+						BirtSoapBindingImpl test = new BirtSoapBindingImpl();
+						GetUpdatedObjectsResponse updatedObjects = test.getUpdatedObjects(getUpdatedObjects);
+						JsonNode valueToTree = objectMapper.valueToTree(updatedObjects);
+						ObjectNode responseObject = objectMapper.createObjectNode();
+						responseObject.put("name", updatedObjects.getClass().getSimpleName());
+						responseObject.set("data", valueToTree);
+						String writeValueAsString = objectMapper.writeValueAsString(responseObject);
+						response.getWriter().print(writeValueAsString);
+					} catch (Exception e) {
+						ObjectNode responseObject = objectMapper.createObjectNode();
+						ObjectNode errorNode = objectMapper.createObjectNode();
+						errorNode.put("faultstring", e.getMessage());
+						errorNode.put("faultcode", 501);
+						ArrayNode detailArray = objectMapper.createArrayNode();
+						for (StackTraceElement ste : e.getStackTrace()) {
+							detailArray.add(ste.toString());
+						}
+
+						errorNode.set("detail", detailArray);
+						responseObject.set("exception", errorNode);
+						String writeValueAsString = objectMapper.writeValueAsString(responseObject);
+						response.getWriter().print(writeValueAsString);
+					}
 				}
 			}
 		} catch (IOException e) {

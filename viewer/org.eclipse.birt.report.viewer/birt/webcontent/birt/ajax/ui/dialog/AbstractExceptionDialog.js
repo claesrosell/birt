@@ -59,10 +59,10 @@ AbstractExceptionDialog.prototype = Object.extend( new AbstractBaseDialog( ),
 	 	var oSpans = this.__instance.getElementsByTagName( 'SPAN' );
 		
 	 	// Prepare fault string (reason)
-	 	var faultStrings = data.getElementsByTagName( 'faultstring' );
-	 	if ( faultStrings[0] && faultStrings[0].firstChild )
+	 	var faultString = data["faultstring"];
+	 	if ( faultString )
 	 	{
-			oSpans[0].innerHTML = faultStrings[0].firstChild.data;
+			oSpans[0].innerHTML = faultString;
 		}
 		else
 		{
@@ -70,37 +70,35 @@ AbstractExceptionDialog.prototype = Object.extend( new AbstractBaseDialog( ),
 		}
 
 	 	// Prepare fault detail (Stack traces)
-	 	var faultDetail = data.getElementsByTagName( 'string' );
+	 	var faultDetail = data["detail"];
 	 	if ( faultDetail && faultDetail.length > 0 )
 	 	{
 	 		var detailSpan = oSpans[1];
 	 		for ( var detailIndex = 0; detailIndex < faultDetail.length; detailIndex++ )
 	 		{
-	 			if ( faultDetail[detailIndex].hasChildNodes() )
-	 			{
-	 				var detailNodes = faultDetail[detailIndex].childNodes;
-	 				if ( detailIndex > 0 )
-	 				{
-	 					detailSpan.appendChild( document.createElement("hr") );
-	 				}
-	 				var detailElement = document.createElement("div");	 				
- 					detailElement.style.whiteSpace = "nowrap";
- 					if ( detailIndex > 0 )
- 					{
- 						detailElement.style.borderTopStyle = "solid";
- 						detailElement.style.borderTopWidth = "1px";
- 					}
-	 				
-	 				for ( var textIndex = 0; textIndex < detailNodes.length; textIndex++ )
-	 				{
-		 				var stackTrace = detailNodes[textIndex].data;
-		 				stackTrace = this.__formatStackTrace( stackTrace )
-		 				var stackTraceElement = document.createElement("span");
-		 				stackTraceElement.innerHTML = stackTrace;
-		 				detailElement.appendChild( stackTraceElement );		 				
-		 				detailSpan.appendChild(detailElement);
-	 				}
-	 			}
+
+				var detailNode = faultDetail[detailIndex];
+				if ( detailIndex > 0 )
+				{
+					detailSpan.appendChild( document.createElement("hr") );
+				}
+				var detailElement = document.createElement("div");	 				
+				detailElement.style.whiteSpace = "nowrap";
+				if ( detailIndex > 0 )
+				{
+					detailElement.style.borderTopStyle = "solid";
+					detailElement.style.borderTopWidth = "1px";
+				}
+				
+
+					var stackTrace = detailNode;
+					stackTrace = this.__formatStackTrace( stackTrace )
+					var stackTraceElement = document.createElement("span");
+					stackTraceElement.innerHTML = stackTrace;
+					detailElement.appendChild( stackTraceElement );		 				
+					detailSpan.appendChild(detailElement);
+
+
 	 		}
 		}
 		else
@@ -108,10 +106,10 @@ AbstractExceptionDialog.prototype = Object.extend( new AbstractBaseDialog( ),
 			oSpans[1].innerHTML = "";
 		}
 
-		var faultCodeElement = data.getElementsByTagName( 'faultcode' );
-	 	if ( faultCodeElement[0] && faultCodeElement[0].firstChild )
+		var faultCodeElement = data["faultcode"];
+	 	if ( data["faultcode"] && data["faultcode"] != null )
 	 	{
-			this.__faultCode = faultCodeElement[0].firstChild.data;
+			this.__faultCode = data["faultcode"];
 		}
 		else
 		{
