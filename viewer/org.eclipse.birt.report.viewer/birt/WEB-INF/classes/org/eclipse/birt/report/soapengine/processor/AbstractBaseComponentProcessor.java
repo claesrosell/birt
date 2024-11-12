@@ -20,7 +20,7 @@ import java.util.Hashtable;
 
 import javax.xml.namespace.QName;
 
-import org.apache.axis.AxisFault;
+import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.engine.api.InstanceID;
 import org.eclipse.birt.report.resource.BirtResources;

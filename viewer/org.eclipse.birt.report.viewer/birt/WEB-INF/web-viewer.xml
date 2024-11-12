@@ -208,7 +208,7 @@
 		<listener-class>org.eclipse.birt.report.listener.ViewerHttpSessionListener</listener-class>
 	</listener>
 
-	<!-- Viewer Servlet, Supports SOAP -->
+	<!-- Viewer Servlet, Supports JSON-RPC -->
 	<servlet>
 		<servlet-name>ViewerServlet</servlet-name>
 		<servlet-class>org.eclipse.birt.report.servlet.ViewerServlet</servlet-class>

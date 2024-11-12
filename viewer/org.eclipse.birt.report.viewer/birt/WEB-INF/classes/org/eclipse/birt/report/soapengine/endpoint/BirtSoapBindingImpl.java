@@ -21,7 +21,6 @@ package org.eclipse.birt.report.soapengine.endpoint;
 
 import javax.xml.namespace.QName;
 
-import org.apache.axis.AxisFault;
 import org.eclipse.birt.report.context.BirtContext;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -32,6 +31,7 @@ import org.eclipse.birt.report.soapengine.api.Operation;
 import org.eclipse.birt.report.soapengine.processor.BaseProcessorFactory;
 import org.eclipse.birt.report.soapengine.processor.IComponentProcessor;
 import org.eclipse.birt.report.soapengine.processor.IProcessorFactory;
+import org.eclipse.birt.report.utility.AxisFault;
 
 public class BirtSoapBindingImpl implements BirtSoapPort {
 

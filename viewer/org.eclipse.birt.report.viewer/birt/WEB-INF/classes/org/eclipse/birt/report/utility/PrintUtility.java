@@ -40,7 +40,7 @@ import javax.print.attribute.standard.Sides;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
-import org.apache.axis.AxisFault;
+import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.exception.ViewerException;
 
 /**

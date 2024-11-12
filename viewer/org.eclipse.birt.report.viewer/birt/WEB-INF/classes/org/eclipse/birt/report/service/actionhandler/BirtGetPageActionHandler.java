@@ -15,7 +15,7 @@ package org.eclipse.birt.report.service.actionhandler;
 
 import java.io.File;
 
-import org.apache.axis.AxisFault;
+import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;

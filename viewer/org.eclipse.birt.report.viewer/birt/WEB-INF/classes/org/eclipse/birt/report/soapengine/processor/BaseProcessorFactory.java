@@ -16,7 +16,7 @@ package org.eclipse.birt.report.soapengine.processor;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.axis.AxisFault;
+import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.soapengine.api.ReportIdType;
 
 /**

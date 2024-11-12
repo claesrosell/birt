@@ -13,7 +13,7 @@
 
 package org.eclipse.birt.report.soapengine.processor;
 
-import org.apache.axis.AxisFault;
+import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.soapengine.api.ReportIdType;
 
 public interface IProcessorFactory {

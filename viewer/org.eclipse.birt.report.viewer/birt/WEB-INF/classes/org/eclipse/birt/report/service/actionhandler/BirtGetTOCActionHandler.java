@@ -16,7 +16,7 @@ package org.eclipse.birt.report.service.actionhandler;
 import java.io.File;
 import java.rmi.RemoteException;
 
-import org.apache.axis.AxisFault;
+import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
 import org.eclipse.birt.report.resource.ResourceConstants;
