@@ -16,9 +16,7 @@ package org.eclipse.birt.report.service.actionhandler;
 import java.rmi.RemoteException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.IBirtConstants;
 import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.context.IContext;
@@ -30,6 +28,7 @@ import org.eclipse.birt.report.service.api.ReportServiceException;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
 import org.eclipse.birt.report.soapengine.api.Oprand;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 /**
  * The abstract action handler to handle "ChangeParameter" action.
@@ -72,7 +71,7 @@ public abstract class AbstractChangeParameterActionHandler extends AbstractBaseA
 				pageNumber = getReportService().getPageNumberByBookmark(docName, bookmark, options);
 
 				if (!isValidPageNumber(context.getRequest(), pageNumber, docName)) {
-					AxisFault fault = new AxisFault();
+					LegacyRpcFault fault = new LegacyRpcFault();
 					fault.setFaultReason(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_BOOKMARK,
 							new String[] { getBookmark(operation.getOprand(), attrBean) }));
 					throw fault;
@@ -127,8 +126,8 @@ public abstract class AbstractChangeParameterActionHandler extends AbstractBaseA
 					try {
 						pageNumber = Integer.parseInt(params[i].getValue());
 					} catch (NumberFormatException e) {
-						AxisFault fault = new AxisFault();
-						fault.setFaultCode(new QName("DocumentProcessor.getPageNumber( )")); //$NON-NLS-1$
+						LegacyRpcFault fault = new LegacyRpcFault();
+						fault.setFaultCode("DocumentProcessor.getPageNumber( )"); //$NON-NLS-1$
 						fault.setFaultString(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_PAGE_NUMBER_PARSE_ERROR,
 										new Object[] { params[i].getValue() }));
@@ -138,8 +137,8 @@ public abstract class AbstractChangeParameterActionHandler extends AbstractBaseA
 					options.setOption(InputOptions.OPT_REQUEST, request);
 					long totalPageNumber = getReportService().getPageCount(documentName, options, new OutputOptions());
 					if (pageNumber <= 0 || pageNumber > totalPageNumber) {
-						AxisFault fault = new AxisFault();
-						fault.setFaultCode(new QName("DocumentProcessor.getPageNumber( )")); //$NON-NLS-1$
+						LegacyRpcFault fault = new LegacyRpcFault();
+						fault.setFaultCode("DocumentProcessor.getPageNumber( )"); //$NON-NLS-1$
 						fault.setFaultString(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_PAGE_NUMBER,
 										new Object[] { Long.valueOf(pageNumber), Long.valueOf(totalPageNumber) }));

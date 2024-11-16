@@ -1,4 +1,4 @@
-package org.eclipse.birt.report.utility;
+package org.eclipse.birt.report.tinyjsonrpc;
 
 import java.rmi.RemoteException;
 
@@ -8,7 +8,7 @@ import javax.xml.namespace.QName;
  * @since 3.3
  *
  */
-public class AxisFault extends RemoteException {
+public class LegacyRpcFault extends RemoteException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,14 +19,14 @@ public class AxisFault extends RemoteException {
 	/**
 	 *
 	 */
-	public AxisFault() {
+	public LegacyRpcFault() {
 		super();
 	}
 
 	/**
 	 * @param message
 	 */
-	public AxisFault(String message) {
+	public LegacyRpcFault(String message) {
 		super(message);
 	}
 
@@ -34,15 +34,15 @@ public class AxisFault extends RemoteException {
 	 * @param message
 	 * @param e
 	 */
-	public AxisFault(String message, Exception e) {
+	public LegacyRpcFault(String message, Exception e) {
 		super(message, e);
 	}
 
 	/**
-	 * @param qName
+	 * @param faultCode
 	 */
-	public void setFaultCode(QName qName) {
-		this.faultCode = qName.toString();
+	public void setFaultCode(String faultCode) {
+		this.faultCode = faultCode;
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class AxisFault extends RemoteException {
 	 * @param e
 	 * @return
 	 */
-	public static AxisFault makeFault(Exception e) {
-		return new AxisFault(e.getMessage(), e);
+	public static LegacyRpcFault makeFault(Exception e) {
+		return new LegacyRpcFault(e.getMessage(), e);
 	}
 
 	/**

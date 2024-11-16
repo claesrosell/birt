@@ -14,6 +14,7 @@
 package org.eclipse.birt.report.servlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Scanner;
@@ -36,8 +37,9 @@ import org.eclipse.birt.report.resource.ResourceConstants;
 import org.eclipse.birt.report.session.IViewingSession;
 import org.eclipse.birt.report.session.ViewingSessionUtil;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjects;
-import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.endpoint.BirtSoapBindingImpl;
+import org.eclipse.birt.report.soapengine.endpoint.BirtSoapPort;
+import org.eclipse.birt.report.tinyjsonrpc.ServiceContainer;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -67,6 +69,8 @@ abstract public class BirtSoapMessageDispatcherServlet extends HttpServlet {
 	 */
 	protected IFragment viewer = null;
 	protected IFragment run = null;
+
+	private ServiceContainer birtJsonRpcServiceContainer;
 
 	/**
 	 * Abstract methods.
@@ -109,6 +113,12 @@ abstract public class BirtSoapMessageDispatcherServlet extends HttpServlet {
 		super.init(config);
 		ParameterAccessor.initParameters(config);
 		BirtResources.setLocale(ParameterAccessor.getWebAppLocale());
+
+		// Create JSON-RPC service container for this Servlet
+		this.birtJsonRpcServiceContainer = new ServiceContainer(BirtSoapPort.class, new BirtSoapBindingImpl());
+		this.birtJsonRpcServiceContainer.addMethod("GetUpdatedObjects").withJavaMethod("getUpdatedObjects")
+				.withParameters("updatedObjects").withTypes(GetUpdatedObjects.class);
+
 		__init(config);
 	}
 
@@ -183,9 +193,9 @@ abstract public class BirtSoapMessageDispatcherServlet extends HttpServlet {
 
 		// create SOAP URL with post parameters
 		StringBuilder builder = new StringBuilder();
-		Iterator it = request.getParameterMap().keySet().iterator();
+		Iterator<String> it = request.getParameterMap().keySet().iterator();
 		while (it.hasNext()) {
-			String paramName = (String) it.next();
+			String paramName = it.next();
 			if (paramName != null && paramName.startsWith("__")) //$NON-NLS-1$
 			{
 				String paramValue = ParameterAccessor.urlEncode(ParameterAccessor.getParameter(request, paramName),
@@ -204,9 +214,9 @@ abstract public class BirtSoapMessageDispatcherServlet extends HttpServlet {
 		request.setAttribute("SoapURL", soapURL); //$NON-NLS-1$
 
 		String requestType = request.getHeader(ParameterAccessor.HEADER_REQUEST_TYPE);
-		boolean isJsonRestRequest = Objects.equals(JSON_CONTENT_TYPE, getContentType(request.getContentType()));
+		boolean isJsonRcpRequest = Objects.equals(JSON_CONTENT_TYPE, getContentType(request.getContentType()));
 		boolean isSoapRequest = ParameterAccessor.HEADER_REQUEST_TYPE_SOAP.equalsIgnoreCase(requestType)
-				&& !isJsonRestRequest;
+				&& !isJsonRcpRequest;
 
 		// refresh the current BIRT viewing session by accessing it
 		IViewingSession session;
@@ -243,8 +253,8 @@ abstract public class BirtSoapMessageDispatcherServlet extends HttpServlet {
 				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
 				super.doPost(request, response);
-			} else if (isJsonRestRequest) {
-				handleJsonRestRequest(request, response);
+			} else if (isJsonRcpRequest) {
+				handleJsonRcpRequest(request, response);
 			} else {
 				try {
 					if (context.getBean().getException() != null) {
@@ -278,48 +288,57 @@ abstract public class BirtSoapMessageDispatcherServlet extends HttpServlet {
 
 	static String extractPostRequestBody(HttpServletRequest request) throws IOException {
 		if ("POST".equalsIgnoreCase(request.getMethod())) {
-			Scanner s = new Scanner(request.getInputStream(), "UTF-8").useDelimiter("\\A");
-			return s.hasNext() ? s.next() : "";
+			try (Scanner s = new Scanner(request.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A")) {
+				return s.hasNext() ? s.next() : "";
+			}
 		}
 		return "";
 	}
 
-	static void handleJsonRestRequest(HttpServletRequest request, HttpServletResponse response) {
+	private void handleJsonRcpRequest(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		try {
 			String bodyContent = extractPostRequestBody(request);
 			if (!bodyContent.isBlank()) {
 				JsonNode jsonRequest = objectMapper.readTree(bodyContent);
-				String serviceOperation = jsonRequest.get("name").asText();
-				if (serviceOperation.equals("GetUpdatedObjects")) {
-					try {
-						JsonNode jsonRequestData = jsonRequest.get("data");
-						GetUpdatedObjects getUpdatedObjects = objectMapper.treeToValue(jsonRequestData,
-								GetUpdatedObjects.class);
-						BirtSoapBindingImpl test = new BirtSoapBindingImpl();
-						GetUpdatedObjectsResponse updatedObjects = test.getUpdatedObjects(getUpdatedObjects);
-						JsonNode valueToTree = objectMapper.valueToTree(updatedObjects);
-						ObjectNode responseObject = objectMapper.createObjectNode();
-						responseObject.put("name", updatedObjects.getClass().getSimpleName());
-						responseObject.set("data", valueToTree);
-						String writeValueAsString = objectMapper.writeValueAsString(responseObject);
-						response.getWriter().print(writeValueAsString);
-					} catch (Exception e) {
-						ObjectNode responseObject = objectMapper.createObjectNode();
-						ObjectNode errorNode = objectMapper.createObjectNode();
-						errorNode.put("faultstring", e.getMessage());
-						errorNode.put("faultcode", 501);
-						ArrayNode detailArray = objectMapper.createArrayNode();
-						for (StackTraceElement ste : e.getStackTrace()) {
-							detailArray.add(ste.toString());
-						}
+				String serviceOperation = jsonRequest.get("method").asText();
 
-						errorNode.set("detail", detailArray);
-						responseObject.set("exception", errorNode);
-						String writeValueAsString = objectMapper.writeValueAsString(responseObject);
-						response.getWriter().print(writeValueAsString);
+				try {
+					ArrayNode parameterData = (ArrayNode) jsonRequest.get("params");
+
+					Object result = this.birtJsonRpcServiceContainer.invoke(serviceOperation, parameterData);
+
+					JsonNode valueToTree = objectMapper.valueToTree(result);
+					ObjectNode jsonRpcResponse = objectMapper.createObjectNode();
+
+					jsonRpcResponse.put("jsonrpc", "2.0");
+					jsonRpcResponse.put("id", jsonRequest.get("id").asText());
+
+					ObjectNode responseObject = objectMapper.createObjectNode();
+					jsonRpcResponse.set("result", responseObject);
+					responseObject.put("name", result.getClass().getSimpleName());
+					responseObject.set("data", valueToTree);
+					String writeValueAsString = objectMapper.writeValueAsString(jsonRpcResponse);
+					response.getWriter().print(writeValueAsString);
+				} catch (Exception e) {
+					ObjectNode jsonRpcError = objectMapper.createObjectNode();
+					jsonRpcError.put("jsonrpc", "2.0");
+					jsonRpcError.put("id", jsonRequest.get("id").asText());
+
+					ObjectNode errorNode = objectMapper.createObjectNode();
+					jsonRpcError.set("error", errorNode);
+					errorNode.put("faultstring", e.getMessage());
+					errorNode.put("faultcode", 501);
+					ArrayNode detailArray = objectMapper.createArrayNode();
+					for (StackTraceElement ste : e.getStackTrace()) {
+						detailArray.add(ste.toString());
 					}
+
+					errorNode.set("detail", detailArray);
+
+					String writeValueAsString = objectMapper.writeValueAsString(jsonRpcError);
+					response.getWriter().print(writeValueAsString);
 				}
 			}
 		} catch (IOException e) {

@@ -15,7 +15,6 @@ package org.eclipse.birt.report.service.actionhandler;
 
 import javax.servlet.ServletOutputStream;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.context.ViewerAttributeBean;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -25,6 +24,7 @@ import org.eclipse.birt.report.service.api.IViewerReportService;
 import org.eclipse.birt.report.service.api.InputOptions;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
 /**
@@ -64,7 +64,7 @@ public class BirtCustomerExtractDataActionHandler extends AbstractBaseActionHand
 			// check extract extension
 			boolean flag = ParameterAccessor.validateExtractExtension(extractExtension);
 			if (!flag) {
-				AxisFault fault = new AxisFault();
+				LegacyRpcFault fault = new LegacyRpcFault();
 				fault.setFaultReason(
 						BirtResources.getMessage(ResourceConstants.REPORT_SERVICE_EXCEPTION_INVALID_EXTRACTEXTENSION));
 				throw fault;
@@ -76,7 +76,7 @@ public class BirtCustomerExtractDataActionHandler extends AbstractBaseActionHand
 		// check extract format
 		boolean flag = ParameterAccessor.validateExtractFormat(extractFormat);
 		if (!flag) {
-			AxisFault fault = new AxisFault();
+			LegacyRpcFault fault = new LegacyRpcFault();
 			fault.setFaultReason(
 					BirtResources.getMessage(ResourceConstants.REPORT_SERVICE_EXCEPTION_INVALID_EXTRACTFORMAT));
 			throw fault;

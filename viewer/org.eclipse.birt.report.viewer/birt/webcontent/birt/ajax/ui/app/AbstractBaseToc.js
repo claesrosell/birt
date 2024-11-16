@@ -320,10 +320,10 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 	 */
 	__neh_click_broadcast : function( query, realId )
 	{
-		birtSoapRequest.setURL( soapURL );
+		birtJsonRpcRequest.setURL( soapURL );
 		if( query == '0' )
 		{
-			birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+			birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 										  "GetToc", null,
 										  { name : "realId", value : realId } );
 			birtEventDispatcher.broadcastEvent( birtEvent.__E_TOC_IMAGE_CLICK );
@@ -446,8 +446,8 @@ AbstractBaseToc.prototype = Object.extend( new AbstractUIComponent( ),
 		if( root.query != 1 )
 		{
 			root.query = '1';
-			birtSoapRequest.setURL( soapURL );
-			birtSoapRequest.addOperation( Constants.documentId,  Constants.Document, "GetToc", null );
+			birtJsonRpcRequest.setURL( soapURL );
+			birtJsonRpcRequest.addOperation( Constants.documentId,  Constants.Document, "GetToc", null );
 			return true;
 		}
 		else

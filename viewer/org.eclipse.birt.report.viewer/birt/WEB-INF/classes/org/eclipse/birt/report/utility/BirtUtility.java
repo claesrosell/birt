@@ -67,6 +67,7 @@ import org.eclipse.birt.report.service.api.ParameterDefinition;
 import org.eclipse.birt.report.service.api.ReportServiceException;
 import org.eclipse.birt.report.soapengine.api.Operation;
 import org.eclipse.birt.report.soapengine.api.Oprand;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 import com.ibm.icu.util.ULocale;
 
@@ -643,9 +644,9 @@ public class BirtUtility {
 	 * @param e     exception
 	 * @return axis fault
 	 */
-	public static AxisFault makeAxisFault(String qName, Exception e) {
-		AxisFault fault = makeAxisFault(e);
-		fault.setFaultCode(new QName(qName));
+	public static LegacyRpcFault makeAxisFault(String qName, Exception e) {
+		LegacyRpcFault fault = makeAxisFault(e);
+		fault.setFaultCode(qName);
 		return fault;
 	}
 
@@ -656,11 +657,11 @@ public class BirtUtility {
 	 * @param e     exception
 	 * @return axis fault
 	 */
-	public static AxisFault makeAxisFault(Exception e) {
-		if (e instanceof AxisFault) {
-			return (AxisFault) e;
+	public static LegacyRpcFault makeAxisFault(Exception e) {
+		if (e instanceof LegacyRpcFault) {
+			return (LegacyRpcFault) e;
 		} else {
-			AxisFault fault = AxisFault.makeFault(e);
+			LegacyRpcFault fault = LegacyRpcFault.makeFault(e);
 			fault.addFaultDetailString(BirtUtility.getStackTrace(e));
 			return fault;
 		}
@@ -678,9 +679,9 @@ public class BirtUtility {
 			return makeAxisFault(qName, exceptions.iterator().next());
 		} else {
 			QName exceptionQName = new QName("string");
-			AxisFault fault = new AxisFault(
+			LegacyRpcFault fault = new LegacyRpcFault(
 					BirtResources.getMessage(ResourceConstants.GENERAL_EXCEPTION_MULTIPLE_EXCEPTIONS));
-			fault.setFaultCode(new QName(qName));
+			fault.setFaultCode(qName);
 
 			for (Iterator i = exceptions.iterator(); i.hasNext();) {
 				Exception e = (Exception) i.next();
@@ -717,8 +718,8 @@ public class BirtUtility {
 						+ onClick + "\" > + </span>\n"); //$NON-NLS-1$
 
 		String errorMessage = null;
-		if (e instanceof AxisFault) {
-			errorMessage = ((AxisFault) e).getFaultString();
+		if (e instanceof LegacyRpcFault) {
+			errorMessage = ((LegacyRpcFault) e).getFaultString();
 		} else {
 			errorMessage = e.getLocalizedMessage();
 

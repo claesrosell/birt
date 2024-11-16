@@ -26,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.report.IBirtConstants;
 import org.eclipse.birt.report.context.BaseAttributeBean;
@@ -42,6 +41,7 @@ import org.eclipse.birt.report.service.actionhandler.BirtRenderReportActionHandl
 import org.eclipse.birt.report.service.actionhandler.BirtRunReportActionHandler;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.BirtUtility;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
@@ -166,7 +166,7 @@ public class FramesetFragment extends BirtBaseFragment {
 
 			// If document isn't completed, throw Exception
 			if (attrBean.isDocumentProcessing()) {
-				AxisFault fault = new AxisFault();
+				LegacyRpcFault fault = new LegacyRpcFault();
 				fault.setFaultReason(
 						BirtResources.getMessage(ResourceConstants.GENERAL_EXCEPTION_DOCUMENT_FILE_PROCESSING));
 				throw fault;

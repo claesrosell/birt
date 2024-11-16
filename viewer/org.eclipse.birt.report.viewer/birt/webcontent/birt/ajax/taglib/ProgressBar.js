@@ -244,16 +244,16 @@ ProgressBar.prototype =
 			Event.element( event ).disabled = true;
 			
 			// cancel task
-			birtSoapRequest.addOperation( Constants.documentId, Constants.Document, "CancelTask", null, { name : Constants.PARAM_TASKID, value : oTaskId.value } );
-			birtSoapRequest.setURL( this.__handler.getAction( ) );
+			birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document, "CancelTask", null, { name : Constants.PARAM_TASKID, value : oTaskId.value } );
+			birtJsonRpcRequest.setURL( this.__handler.getAction( ) );
 			
-			if ( !birtSoapRequest.getURL( ) ) return;
+			if ( !birtJsonRpcRequest.getURL( ) ) return;
 			
-			var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: birtSoapRequest.__xml_document,
+			var myAjax = new Ajax.Request( birtJsonRpcRequest.getURL( ), { method: 'post', postBody: birtJsonRpcRequest.getJsonDocument(),
 				contentType: 'text/xml; charset=utf-8',
 				onSuccess: this.responseHandler, onFailure: this.invalidResponseHandler,
 				requestHeaders: ['SOAPAction', '""', 'request-type', 'SOAP', 'Connection', 'keep-alive' ] } );
-			birtSoapRequest.reset( );												
+			birtJsonRpcRequest.reset( );												
 		}
 	},
 

@@ -69,7 +69,7 @@ function isDebugging( )
  */
 function debug( text, isSoapMessage )
 {
-	//debug( birtSoapRequest.prettyPrintXML(request.responseXML.documentElement), true);
+	//debug( birtJsonRpcRequest.prettyPrintXML(request.responseXML.documentElement), true);
 	try
 	{
 		if ( isDebugging( ) )

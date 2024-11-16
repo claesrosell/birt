@@ -17,7 +17,6 @@ BirtCommunicationManager = Class.create( );
 
 BirtCommunicationManager.prototype =
 {
-	__useJsonRest : true,
 	__active : false,
 	
 	/**
@@ -36,81 +35,30 @@ BirtCommunicationManager.prototype =
 	 */
 	connect: function( )
 	{
-		if ( !this.__useJsonRest ) {
-			var xmlDoc = birtSoapRequest.__xml_document;
-		
-			if( xmlDoc )
-			{
-				debug( birtSoapRequest.prettyPrintXML(xmlDoc), true);
-				if ( BrowserUtility.isSafari || BrowserUtility.isFirefox3 )
-				{
-					// WORKAROUND: sending the XML DOM doesn't replace the
-					// ampersands properly but the XMLSerializer does.
-					xmlDoc = (new XMLSerializer()).serializeToString(xmlDoc);
-				}
-			}		
-			
-			if ( !birtSoapRequest.getURL( ) ) return;
+		let jsonDoc = birtJsonRpcRequest.getJsonDocument();
 	
-			//activate delay message manager;
-			this.__active = true;
-			birtProgressBar.__start( );
-			
-			//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
-			var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: xmlDoc,
-				contentType: 'text/xml; charset=UTF-8',
-				onSuccess: this.responseHandler, onFailure: this.invalidResponseHandler,
-				requestHeaders: ['SOAPAction', '""', 'request-type', 'SOAP', 'Connection', 'keep-alive' ] } );
-			birtSoapRequest.reset( );
-		} else {
-			let jsonDoc = birtSoapRequest.getJsonDocument();
-		
-			
-			if ( !birtSoapRequest.getURL( ) ) return;
-	
-			//activate delay message manager;
-			this.__active = true;
-			birtProgressBar.__start( );
-			
-			//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
-			var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: jsonDoc,
-				contentType: 'application/json',
-				onSuccess: this.jsonResponseHandler, onFailure: this.invalidResponseHandler,
-				requestHeaders: ['request-type', 'SOAP', 'Connection', 'keep-alive' ] } );	// SOAP for session handling. Replace with something else.
-				birtSoapRequest.reset( );
-		}
-	},
-	
-	/**
-	 *	Callback function triggered when reponse is ready, status is 200.
-	 *
-	 *	@request, httpXmlRequest instance
-	 *	@return, void
-	 */
-	responseHandler: function( request )
-	{
-		if ( isDebugging( ) )
-		{
-			debug(request.responseText, true);
-			debug(birtSoapRequest.prettyPrintXML(request.responseXML.documentElement), true);
-		}
-		
-		if ( request.responseXML && request.responseXML.documentElement )
-		{
-			birtSoapResponse.process( request.responseXML.documentElement );
-		}
-		
-		birtCommunicationManager.postProcess( );
-		//todo handle responseText
-	},
+		if ( !birtJsonRpcRequest.getURL( ) ) return;
 
+		//activate delay message manager;
+		this.__active = true;
+		birtProgressBar.__start( );
+		
+		//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
+		var myAjax = new Ajax.Request( birtJsonRpcRequest.getURL( ), { method: 'post', postBody: jsonDoc,
+			contentType: 'application/json',
+			onSuccess: this.responseHandler, onFailure: this.invalidResponseHandler,
+			requestHeaders: ['request-type', 'SOAP', 'Connection', 'keep-alive' ] } );	// SOAP for session handling. Replace with something else.
+		birtJsonRpcRequest.reset( );
+
+	},
+	
 	/**
 	 *	Callback function triggered when reponse is ready, status is 200.
 	 *
 	 *	@request, httpXmlRequest instance
 	 *	@return, void
 	 */
-	 jsonResponseHandler: function( request )
+	 responseHandler: function( request )
 	 {
 		let jsonResponse = JSON.parse(request.responseText);
 		 if ( isDebugging( ) )
@@ -120,7 +68,7 @@ BirtCommunicationManager.prototype =
 		 
 		 if (jsonResponse != null )
 		 {
-			 birtSoapResponse.processJson( jsonResponse );
+			birtJsonRpcResponse.process( jsonResponse );
 		 }
 		 
 		 birtCommunicationManager.postProcess( );
@@ -141,7 +89,7 @@ BirtCommunicationManager.prototype =
 		
 		if ( request.responseXML && request.responseXML.documentElement )
 		{
-			birtSoapResponse.process( request.responseXML.documentElement );
+			birtJsonRpcResponse.process( request.responseXML.documentElement );
 		}
 		
 		birtCommunicationManager.postProcess( );

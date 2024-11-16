@@ -211,7 +211,7 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		
 		if( pageNum > 0 )
 		{		
-	        birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+	        birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 	        							  "ChangeParameter", null, birtParameterDialog.__parameter,
 										  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 										  { name : Constants.PARAM_PAGE, value : pageNum },
@@ -219,12 +219,12 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		}
 		else
 		{
-	        birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+	        birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 	        							  "ChangeParameter", null, birtParameterDialog.__parameter,
 										  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 										  { name : Constants.PARAM_TASKID, value : taskid } );			
 		}
-		birtSoapRequest.setURL( soapURL );
+		birtJsonRpcRequest.setURL( soapURL );
 		birtProgressBar.setRedirect( true );
 		birtEventDispatcher.setFocusId( null );	// Clear out current focusid.
 		return true;
@@ -238,10 +238,10 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		// set task id
 		var taskid = birtUtility.setTaskId( );
 		
-	    birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+	    birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 	    							 "GetCascadingParameter", null, object,
 	    							 { name : Constants.PARAM_TASKID, value : taskid } );
-		birtSoapRequest.setURL( soapURL );
+		birtJsonRpcRequest.setURL( soapURL );
 		birtEventDispatcher.setFocusId( null );	// Clear out current focusid.
 		return true;
 	},
@@ -278,10 +278,10 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 			url = birtUtility.deleteURLParameter( url, Constants.PARAM_ISTOC );
 		}
 		
-		birtSoapRequest.setURL( url );
+		birtJsonRpcRequest.setURL( url );
 		if ( object )
 		{
-			birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+			birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 										  "GetPage", null,
 										  object,
 										  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
@@ -289,7 +289,7 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		}
 		else
 		{
-			birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+			birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 										  "GetPage", null,
 										  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 										  { name : Constants.PARAM_TASKID, value : taskid } );
@@ -315,12 +315,12 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		// Get current page number
 		var pageNum = birtUtility.getPageNumber( );
 		
-		birtSoapRequest.setURL( soapURL );
+		birtJsonRpcRequest.setURL( soapURL );
 		if ( object )
 		{
 			if( pageNum > 0 )
 			{
-				birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+				birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 											  "GetPage", null, birtParameterDialog.__parameter,
 											  object,
 											  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
@@ -329,7 +329,7 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 			}
 			else
 			{
-				birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+				birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 											  "GetPage", null, birtParameterDialog.__parameter,
 											  object,
 											  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
@@ -340,7 +340,7 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 		{
 			if( pageNum > 0 )
 			{
-				birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+				birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 											  "GetPage", null, birtParameterDialog.__parameter,
 											  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 											  { name : Constants.PARAM_PAGE, value : pageNum },
@@ -348,7 +348,7 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 			}
 			else
 			{
-				birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+				birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
 											  "GetPage", null, birtParameterDialog.__parameter,
 											  { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 											  { name : Constants.PARAM_TASKID, value : taskid } );
@@ -368,8 +368,8 @@ AbstractBaseReportDocument.prototype = Object.extend( new AbstractReportComponen
 	 */
 	__beh_export : function( id )
 	{
-		birtSoapRequest.setURL( soapURL);
-		birtSoapRequest.addOperation( "Document", Constants.Document, "QueryExport", null );
+		birtJsonRpcRequest.setURL( soapURL);
+		birtJsonRpcRequest.addOperation( "Document", Constants.Document, "QueryExport", null );
 		return true;
 	}
 });

@@ -15,7 +15,6 @@ package org.eclipse.birt.report.service.actionhandler;
 
 import java.io.File;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -24,6 +23,7 @@ import org.eclipse.birt.report.service.BirtReportServiceFactory;
 import org.eclipse.birt.report.service.api.IViewerReportService;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 public class BirtGetPageActionHandler extends AbstractGetPageActionHandler {
 
@@ -58,14 +58,14 @@ public class BirtGetPageActionHandler extends AbstractGetPageActionHandler {
 
 		file = new File(__docName);
 		if (!file.exists()) {
-			AxisFault fault = new AxisFault();
+			LegacyRpcFault fault = new LegacyRpcFault();
 			fault.setFaultReason(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_NO_REPORT_DOCUMENT));
 			throw fault;
 		} else {
 			// If document isn't completed, throw Exception
 			BaseAttributeBean bean = (BaseAttributeBean) context.getBean();
 			if (bean.isDocumentProcessing()) {
-				AxisFault fault = new AxisFault();
+				LegacyRpcFault fault = new LegacyRpcFault();
 				fault.setFaultReason(
 						BirtResources.getMessage(ResourceConstants.GENERAL_EXCEPTION_DOCUMENT_FILE_PROCESSING));
 				throw fault;

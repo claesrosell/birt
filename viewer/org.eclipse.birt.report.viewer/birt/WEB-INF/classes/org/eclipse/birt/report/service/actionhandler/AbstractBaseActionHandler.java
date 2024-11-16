@@ -17,7 +17,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
 
 import org.eclipse.birt.report.IBirtConstants;
 import org.eclipse.birt.report.context.BaseAttributeBean;
@@ -36,7 +35,7 @@ import org.eclipse.birt.report.soapengine.api.ReportId;
 import org.eclipse.birt.report.soapengine.api.ReportIdType;
 import org.eclipse.birt.report.soapengine.api.Update;
 import org.eclipse.birt.report.soapengine.api.UpdateData;
-import org.eclipse.birt.report.utility.AxisFault;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.BirtUtility;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
@@ -127,8 +126,8 @@ abstract public class AbstractBaseActionHandler implements IActionHandler {
 					try {
 						pageNumber = Integer.parseInt(params[i].getValue());
 					} catch (NumberFormatException e) {
-						AxisFault fault = new AxisFault();
-						fault.setFaultCode(new QName("DocumentProcessor.getPageNumber( )")); //$NON-NLS-1$
+						LegacyRpcFault fault = new LegacyRpcFault();
+						fault.setFaultCode("DocumentProcessor.getPageNumber( )"); //$NON-NLS-1$
 						fault.setFaultString(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_PAGE_NUMBER_PARSE_ERROR,
 										new Object[] { params[i].getValue() }));
@@ -138,8 +137,8 @@ abstract public class AbstractBaseActionHandler implements IActionHandler {
 					options.setOption(InputOptions.OPT_REQUEST, request);
 					long totalPageNumber = getReportService().getPageCount(documentName, options, new OutputOptions());
 					if (pageNumber <= 0 || pageNumber > totalPageNumber) {
-						AxisFault fault = new AxisFault();
-						fault.setFaultCode(new QName("DocumentProcessor.getPageNumber( )")); //$NON-NLS-1$
+						LegacyRpcFault fault = new LegacyRpcFault();
+						fault.setFaultCode("DocumentProcessor.getPageNumber( )"); //$NON-NLS-1$
 						fault.setFaultString(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_PAGE_NUMBER,
 										new Object[] { Long.valueOf(pageNumber), Long.valueOf(totalPageNumber) }));
@@ -231,8 +230,8 @@ abstract public class AbstractBaseActionHandler implements IActionHandler {
 			String id = (String) activeIds.get(i);
 			int firstComma = id.indexOf(',');
 			if (firstComma == -1) {
-				AxisFault fault = new AxisFault();
-				fault.setFaultCode(new QName("DocumentProcessor.parseReportId( )")); //$NON-NLS-1$
+				LegacyRpcFault fault = new LegacyRpcFault();
+				fault.setFaultCode("DocumentProcessor.parseReportId( )"); //$NON-NLS-1$
 				fault.setFaultString(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_ID_FORMAT,
 						new String[] { id }));
 				throw fault;

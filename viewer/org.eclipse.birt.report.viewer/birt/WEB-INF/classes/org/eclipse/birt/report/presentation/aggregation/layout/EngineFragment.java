@@ -25,7 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.IBirtConstants;
 import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.context.BirtContext;
@@ -46,6 +45,7 @@ import org.eclipse.birt.report.session.IViewingSession;
 import org.eclipse.birt.report.session.ViewingSessionUtil;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.BirtUtility;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
@@ -201,13 +201,13 @@ public class EngineFragment extends BirtBaseFragment {
 
 					file = new File(attrBean.getReportDocumentName());
 					if (!file.exists()) {
-						AxisFault fault = new AxisFault();
+						LegacyRpcFault fault = new LegacyRpcFault();
 						fault.setFaultReason(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_NO_REPORT_DOCUMENT));
 						throw fault;
 					} else // If document isn't completed, throw Exception
 					if (attrBean.isDocumentProcessing()) {
-						AxisFault fault = new AxisFault();
+						LegacyRpcFault fault = new LegacyRpcFault();
 						fault.setFaultReason(
 								BirtResources.getMessage(ResourceConstants.GENERAL_EXCEPTION_DOCUMENT_FILE_PROCESSING));
 						throw fault;

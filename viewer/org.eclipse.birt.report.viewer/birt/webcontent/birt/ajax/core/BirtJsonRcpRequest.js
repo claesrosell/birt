@@ -6,36 +6,22 @@
  *		http://www.eclipse.org/legal/epl-2.0.html
  *	
  *	Contributors:
- *		Actuate Corporation - Initial implementation.
+ *		Claes Rosell - Initial implementation.
  *****************************************************************************/
 
 /**
- *	BirtJsonRestRequest
+ *	BirtJsonRcpRequest
  *	...
  */
-class BirtJsonRestRequest {
+class BirtJsonRcpRequest {
 
 	// Private fields
 	#url = null;
 	#message = null;
-	#jsonDocument = null;
 	#payload = null;
-	#operationContent = null;
 
 	constructor() {
 		this.reset();
-	}
-
-	/**
-	 *	Init the request message. There's only one request message DOM instance at any time,
-	 *	when client running.
-	 *
-	 *	@message, request message DOM
-	 *	@return, void
-	 */
-	setMessage(message) {
-		// TODO: need to use dom contrcture the request.
-		this.__xml_document = message;
 	}
 
 	/**
@@ -66,18 +52,22 @@ class BirtJsonRestRequest {
 	}
 
 	getJsonDocument() {
-		return JSON.stringify(this.#payload);
+		// JSON-RPC Request
+		let jsonRpcRequest = { "jsonrpc": "2.0", "method": "GetUpdatedObjects", "id": 1 };
+		jsonRpcRequest["params"] = [];
+		let argList = [];
+		argList.push( this.#payload);
+
+		jsonRpcRequest["params"] = argList;
+		return JSON.stringify(jsonRpcRequest);
 	}
 
 	/**
-	* Clears the message body
+	* Recreates the message payload
 	*/
 	reset() {
-		// JSON Payload
 		let payload = {};
-		payload["name"] = "GetUpdatedObjects";
-		payload["data"] = {};
-		payload["data"]["operation"] = [];
+		payload["operation"] = [];
 		this.#payload = payload;
 	}
 
@@ -128,10 +118,10 @@ class BirtJsonRestRequest {
 		}
 
 		// Add to list of operations
-		this.#payload["data"]["operation"].push(operation);
+		this.#payload["operation"].push(operation);
 
 		debug("ADDED OPERATION : new message body is\n" + JSON.stringify());
 	}
 }
 
-let birtSoapRequest = new BirtJsonRestRequest();
+let birtJsonRpcRequest = new BirtJsonRcpRequest();

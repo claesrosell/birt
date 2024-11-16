@@ -16,7 +16,6 @@ package org.eclipse.birt.report.service.actionhandler;
 import java.io.File;
 import java.rmi.RemoteException;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
 import org.eclipse.birt.report.resource.ResourceConstants;
@@ -24,6 +23,7 @@ import org.eclipse.birt.report.service.BirtReportServiceFactory;
 import org.eclipse.birt.report.service.api.IViewerReportService;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 /**
  * Implement action handler for GetToc event.
@@ -72,7 +72,7 @@ public class BirtGetTOCActionHandler extends AbstractGetTOCActionHandler {
 		File file = new File(__docName);
 		if (!file.exists()) {
 			// if document file doesn't exist, throw exception
-			AxisFault fault = new AxisFault();
+			LegacyRpcFault fault = new LegacyRpcFault();
 			fault.setFaultReason(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_DOCUMENT_FILE_NO_EXIST));
 			throw fault;
 		}

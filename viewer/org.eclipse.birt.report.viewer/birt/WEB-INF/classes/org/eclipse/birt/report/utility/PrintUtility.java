@@ -38,10 +38,9 @@ import javax.print.attribute.standard.PrinterMakeAndModel;
 import javax.print.attribute.standard.SheetCollate;
 import javax.print.attribute.standard.Sides;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.exception.ViewerException;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 /**
  * Utilities for Print Report Service
@@ -151,8 +150,8 @@ public class PrintUtility {
 				job.print(doc, pas);
 			}
 		} catch (PrintException e) {
-			AxisFault fault = new AxisFault(e.getLocalizedMessage(), e);
-			fault.setFaultCode(new QName("PrintUtility.execPrint( )")); //$NON-NLS-1$
+			LegacyRpcFault fault = new LegacyRpcFault(e.getLocalizedMessage(), e);
+			fault.setFaultCode("PrintUtility.execPrint( )"); //$NON-NLS-1$
 			fault.setFaultString(e.getLocalizedMessage());
 			throw fault;
 		}

@@ -15,7 +15,6 @@ package org.eclipse.birt.report.service.actionhandler;
 
 import java.util.List;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -28,6 +27,7 @@ import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
 import org.eclipse.birt.report.soapengine.api.ResultSet;
 import org.eclipse.birt.report.soapengine.api.ResultSets;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
 /**
@@ -98,7 +98,7 @@ public abstract class AbstractQueryExportActionHandler extends AbstractBaseActio
 
 		if (exportedResultSets == null) {
 			// No result sets available
-			AxisFault fault = new AxisFault();
+			LegacyRpcFault fault = new LegacyRpcFault();
 			fault.setFaultReason(
 					BirtResources.getMessage(ResourceConstants.REPORT_SERVICE_EXCEPTION_EXTRACT_DATA_NO_RESULT_SET));
 			throw fault;

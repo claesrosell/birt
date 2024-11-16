@@ -78,9 +78,9 @@ BirtReportDocument.prototype = Object.extend( new AbstractBaseReportDocument( ),
 		{
 	        birtParameterDialog.__parameter.length = birtParameterDialog.__parameter.length - 1;
 		}
-        birtSoapRequest.addOperation( Constants.documentId, Constants.Document,
+        birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,
         							  "CacheParameter", null, birtParameterDialog.__parameter );
-		birtSoapRequest.setURL( soapURL );
+		birtJsonRpcRequest.setURL( soapURL );
 		birtEventDispatcher.setFocusId( null );	// Clear out current focusid.
 		return true;
 	},
@@ -167,8 +167,8 @@ BirtReportDocument.prototype = Object.extend( new AbstractBaseReportDocument( ),
 	 */
 	__beh_cancelTask : function( id, object )
 	{	
-        birtSoapRequest.addOperation( Constants.documentId, Constants.Document, "CancelTask", null, object );
-		birtSoapRequest.setURL( soapURL );
+        birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document, "CancelTask", null, object );
+		birtJsonRpcRequest.setURL( soapURL );
 		birtEventDispatcher.setFocusId( null );	// Clear out current focusid.
 		return true;
 	},
@@ -186,19 +186,19 @@ BirtReportDocument.prototype = Object.extend( new AbstractBaseReportDocument( ),
 		
 		if( object )
 		{
-	        birtSoapRequest.addOperation( Constants.documentId, Constants.Document, "GetPageAll",
+	        birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document, "GetPageAll",
 	        							   null, birtParameterDialog.__parameter, object,
 	        							   { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 	        							   { name : Constants.PARAM_TASKID, value : taskid } );
 		}
 		else
 		{
-	        birtSoapRequest.addOperation( Constants.documentId, Constants.Document, "GetPageAll",
+	        birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document, "GetPageAll",
 	        							   null, birtParameterDialog.__parameter,
         							       { name : Constants.PARAM_SVG, value : this.__has_svg_support? "true" : "false" },
 	        							   { name : Constants.PARAM_TASKID, value : taskid } );			
 		}
-		birtSoapRequest.setURL( soapURL );
+		birtJsonRpcRequest.setURL( soapURL );
 		birtEventDispatcher.setFocusId( null );	// Clear out current focusid.
 		birtProgressBar.setRedirect( true );
 		return true;

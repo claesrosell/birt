@@ -19,8 +19,6 @@
 
 package org.eclipse.birt.report.soapengine.endpoint;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.birt.report.context.BirtContext;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -31,7 +29,7 @@ import org.eclipse.birt.report.soapengine.api.Operation;
 import org.eclipse.birt.report.soapengine.processor.BaseProcessorFactory;
 import org.eclipse.birt.report.soapengine.processor.IComponentProcessor;
 import org.eclipse.birt.report.soapengine.processor.IProcessorFactory;
-import org.eclipse.birt.report.utility.AxisFault;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 public class BirtSoapBindingImpl implements BirtSoapPort {
 
@@ -44,8 +42,8 @@ public class BirtSoapBindingImpl implements BirtSoapPort {
 
 		IContext context = BirtContext.getInstance();
 		if (context.getBean().getException() != null) {
-			AxisFault fault = new AxisFault();
-			fault.setFaultCode(new QName("BirtSoapBindingImpl.getUpdatedObjects( )")); //$NON-NLS-1$
+			LegacyRpcFault fault = new LegacyRpcFault();
+			fault.setFaultCode("BirtSoapBindingImpl.getUpdatedObjects( )"); //$NON-NLS-1$
 			fault.setFaultString(context.getBean().getException().getLocalizedMessage());
 			throw fault;
 		}
@@ -56,8 +54,8 @@ public class BirtSoapBindingImpl implements BirtSoapPort {
 					op.getTarget().getType());
 
 			if (processor == null) {
-				AxisFault fault = new AxisFault();
-				fault.setFaultCode(new QName("BirtSoapBindingImpl.getUpdatedObjects( )")); //$NON-NLS-1$
+				LegacyRpcFault fault = new LegacyRpcFault();
+				fault.setFaultCode("BirtSoapBindingImpl.getUpdatedObjects( )"); //$NON-NLS-1$
 				fault.setFaultString(
 						BirtResources.getMessage(ResourceConstants.SOAP_BINDING_EXCEPTION_NO_HANDLER_FOR_TARGET,
 								new Object[] { op.getTarget() }));

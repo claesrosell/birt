@@ -19,7 +19,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.BaseAttributeBean;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -31,6 +30,7 @@ import org.eclipse.birt.report.service.api.ReportServiceException;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
 import org.eclipse.birt.report.soapengine.api.Oprand;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
 /**
@@ -121,7 +121,7 @@ public class BirtGetReportletActionHandler extends AbstractBaseActionHandler {
 
 		file = new File(__docName);
 		if (!file.exists()) {
-			AxisFault fault = new AxisFault();
+			LegacyRpcFault fault = new LegacyRpcFault();
 			fault.setFaultReason(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_NO_REPORT_DOCUMENT));
 			throw fault;
 		}

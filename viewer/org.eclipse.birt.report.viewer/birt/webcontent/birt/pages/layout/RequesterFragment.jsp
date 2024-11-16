@@ -114,9 +114,8 @@
 		<SCRIPT SRC="birt/ajax/utility/BirtPosition.js" type="text/javascript"></script>
 
 		<SCRIPT SRC="birt/ajax/core/BirtCommunicationManager.js" type="text/javascript"></script>
-<!--	<script src="birt/ajax/core/BirtSoapRequest.js" type="text/javascript"></script> -->
-		<script src="birt/ajax/core/BirtJsonRestRequest.js" type="text/javascript"></script>
-		<SCRIPT SRC="birt/ajax/core/BirtSoapResponse.js" type="text/javascript"></script>
+		<script src="birt/ajax/core/BirtJsonRcpRequest.js" type="text/javascript"></script>
+		<SCRIPT SRC="birt/ajax/core/BirtJsonRpcResponse.js" type="text/javascript"></script>
 
 				
 	</HEAD>

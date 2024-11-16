@@ -18,9 +18,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.IBirtConstants;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.context.ViewerAttributeBean;
@@ -37,6 +35,7 @@ import org.eclipse.birt.report.soapengine.api.Page;
 import org.eclipse.birt.report.soapengine.api.Update;
 import org.eclipse.birt.report.soapengine.api.UpdateContent;
 import org.eclipse.birt.report.soapengine.api.UpdateData;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.DataUtil;
 import org.eclipse.birt.report.utility.ParameterAccessor;
 
@@ -150,7 +149,7 @@ public abstract class AbstractGetPageActionHandler extends AbstractBaseActionHan
 				__pageNumber = getReportService().getPageNumberByBookmark(__docName, __bookmark, options);
 
 				if (!isValidPageNumber(context.getRequest(), __pageNumber, __docName)) {
-					AxisFault fault = new AxisFault();
+					LegacyRpcFault fault = new LegacyRpcFault();
 					fault.setFaultReason(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_BOOKMARK,
 							new String[] { getBookmark(operation.getOprand(), __bean) }));
 					throw fault;
@@ -161,7 +160,7 @@ public abstract class AbstractGetPageActionHandler extends AbstractBaseActionHan
 
 		// Verify the page number again.
 		if (!isValidPageNumber(context.getRequest(), __pageNumber, __docName)) {
-			AxisFault fault = new AxisFault();
+			LegacyRpcFault fault = new LegacyRpcFault();
 			fault.setFaultReason(BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_PAGE_NUMBER,
 					new Object[] { Long.valueOf(__pageNumber), Long.valueOf(__totalPageNumber) }));
 			throw fault;
@@ -275,16 +274,16 @@ public abstract class AbstractGetPageActionHandler extends AbstractBaseActionHan
 					try {
 						pageNumber = Integer.parseInt(params[i].getValue());
 					} catch (NumberFormatException e) {
-						AxisFault fault = new AxisFault();
-						fault.setFaultCode(new QName("DocumentProcessor.getPageNumber( )")); //$NON-NLS-1$
+						LegacyRpcFault fault = new LegacyRpcFault();
+						fault.setFaultCode("DocumentProcessor.getPageNumber( )"); //$NON-NLS-1$
 						fault.setFaultString(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_PAGE_NUMBER_PARSE_ERROR,
 										new Object[] { params[i].getValue() }));
 						throw fault;
 					}
 					if (pageNumber <= 0 || pageNumber > __totalPageNumber) {
-						AxisFault fault = new AxisFault();
-						fault.setFaultCode(new QName("DocumentProcessor.getPageNumber( )")); //$NON-NLS-1$
+						LegacyRpcFault fault = new LegacyRpcFault();
+						fault.setFaultCode("DocumentProcessor.getPageNumber( )"); //$NON-NLS-1$
 						fault.setFaultString(
 								BirtResources.getMessage(ResourceConstants.ACTION_EXCEPTION_INVALID_PAGE_NUMBER,
 										new Object[] { Long.valueOf(pageNumber), Long.valueOf(__totalPageNumber) }));

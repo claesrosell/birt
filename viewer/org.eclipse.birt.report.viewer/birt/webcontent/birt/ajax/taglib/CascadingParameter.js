@@ -133,11 +133,11 @@ CascadingParameter.prototype =
 		
 		// Set task id
 		var taskid = birtUtility.setTaskId( );
-		birtSoapRequest.addOperation( Constants.documentId, Constants.Document,'GetCascadingParameter',null,
+		birtJsonRpcRequest.addOperation( Constants.documentId, Constants.Document,'GetCascadingParameter',null,
 									this.__data,{ name : Constants.PARAM_TASKID, value : taskid } );
-		birtSoapRequest.setURL( this.__action );
+		birtJsonRpcRequest.setURL( this.__action );
 			
-		if ( !birtSoapRequest.getURL( ) ) return;
+		if ( !birtJsonRpcRequest.getURL( ) ) return;
 				
 		this.__active = true;
 		progressBar.__start( );
@@ -146,11 +146,11 @@ CascadingParameter.prototype =
 		soapResponseHelper.setParameterGroup( this.__group );
 		
 		//workaround for Bugzilla Bug 144598. Add request header "Connection" as "keep-alive"
-		var myAjax = new Ajax.Request( birtSoapRequest.getURL( ), { method: 'post', postBody: birtSoapRequest.__xml_document,
+		var myAjax = new Ajax.Request( birtJsonRpcRequest.getURL( ), { method: 'post', postBody: birtJsonRpcRequest.getJsonDocument(),
 			contentType: 'text/xml; charset=utf-8',
 			onSuccess: this.responseHandler, onFailure: this.invalidResponseHandler,
 			requestHeaders: ['SOAPAction', '""', 'request-type', 'SOAP', 'Connection', 'keep-alive' ] } );
-		birtSoapRequest.reset( );		
+		birtJsonRpcRequest.reset( );		
 	},
 	
 	/**

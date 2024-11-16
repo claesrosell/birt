@@ -18,9 +18,6 @@ import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.engine.api.InstanceID;
 import org.eclipse.birt.report.resource.BirtResources;
@@ -28,6 +25,7 @@ import org.eclipse.birt.report.resource.ResourceConstants;
 import org.eclipse.birt.report.service.actionhandler.IActionHandler;
 import org.eclipse.birt.report.soapengine.api.GetUpdatedObjectsResponse;
 import org.eclipse.birt.report.soapengine.api.Operation;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 import org.eclipse.birt.report.utility.BirtUtility;
 
 public abstract class AbstractBaseComponentProcessor implements IComponentProcessor {
@@ -94,8 +92,8 @@ public abstract class AbstractBaseComponentProcessor implements IComponentProces
 		String operator = op.getOperator().toUpperCase();
 		if (operator == null) {
 			// TODO: need s common method for this.
-			AxisFault fault = new AxisFault();
-			fault.setFaultCode(new QName(this.getClass().getName()));
+			LegacyRpcFault fault = new LegacyRpcFault();
+			fault.setFaultCode(this.getClass().getName());
 			fault.setFaultString(
 					BirtResources.getMessage(ResourceConstants.COMPONENT_PROCESSOR_EXCEPTION_MISSING_OPERATOR));
 			throw fault;
@@ -110,8 +108,8 @@ public abstract class AbstractBaseComponentProcessor implements IComponentProces
 				throw BirtUtility.makeAxisFault(target);
 			} catch (Exception e) {
 				// TODO: clear this out.
-				AxisFault fault = new AxisFault();
-				fault.setFaultCode(new QName("Clear out this.")); //$NON-NLS-1$
+				LegacyRpcFault fault = new LegacyRpcFault();
+				fault.setFaultCode("Clear out this."); //$NON-NLS-1$
 				fault.setFaultString(e.getLocalizedMessage());
 				throw fault;
 			}

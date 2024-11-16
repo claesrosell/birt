@@ -49,7 +49,7 @@ SoapResponseHelper.prototype =
 	{
 		if( !message || !this.__parameterGroup ) return;
 		
-		//alert( birtSoapRequest.prettyPrintXML( message ) );
+		//alert( birtJsonRpcRequest.prettyPrintXML( message ) );
 		var soapBody = message.getElementsByTagName( 'soapenv:Body' )[ 0 ];
 		if ( !soapBody )
 		{

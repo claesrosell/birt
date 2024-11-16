@@ -16,8 +16,8 @@ package org.eclipse.birt.report.soapengine.processor;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
-import org.eclipse.birt.report.utility.AxisFault;
 import org.eclipse.birt.report.soapengine.api.ReportIdType;
+import org.eclipse.birt.report.tinyjsonrpc.LegacyRpcFault;
 
 /**
  * Processor factory class.
@@ -38,7 +38,7 @@ public class BaseProcessorFactory implements IProcessorFactory {
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
 	 */
-	public static synchronized IProcessorFactory getInstance() throws AxisFault {
+	public static synchronized IProcessorFactory getInstance() throws LegacyRpcFault {
 		if (instance != null) {
 			return instance;
 		}
@@ -67,7 +67,7 @@ public class BaseProcessorFactory implements IProcessorFactory {
 	 * @throws FileNotFoundException
 	 */
 	@Override
-	public void init() throws AxisFault {
+	public void init() throws LegacyRpcFault {
 	}
 
 	@Override
