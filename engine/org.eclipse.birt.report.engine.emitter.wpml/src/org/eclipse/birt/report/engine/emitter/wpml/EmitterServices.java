@@ -406,10 +406,16 @@ public class EmitterServices {
 		Object value = null;
 
 		if (name.equalsIgnoreCase(DocEmitter.WORD_MARGIN_PADDING_WRAPPED_TABLE)) {
-			value = reportContent.getDesign().getReportDesign().getExcelAutoFilter();
+			value = reportContent.getDesign().getReportDesign().getWordWrapTableForMarginPadding();
 
 		} else if (name.equalsIgnoreCase(DocEmitter.WORD_MARGIN_PADDING_COMBINE)) {
-			value = reportContent.getDesign().getReportDesign().getExcelDisableGrouping();
+			value = reportContent.getDesign().getReportDesign().getWordCombineMarginPadding();
+
+		} else if (name.equalsIgnoreCase(DocEmitter.WORD_HEADER_FOOTER_WRAPPED_TABLE)) {
+			value = reportContent.getDesign().getReportDesign().getWordWrapTableForHeaderFooter();
+
+		} else if (name.equalsIgnoreCase(DocEmitter.WORD_ADD_EMPTY_PARAGRAPH_FOR_LIST_CELL)) {
+			value = reportContent.getDesign().getReportDesign().getWordListCellAddEmptyPara();
 
 		}
 		return value;
